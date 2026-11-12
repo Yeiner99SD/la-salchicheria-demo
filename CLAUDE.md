@@ -61,6 +61,7 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 
 ## Estado (12/11/2026)
 - **Web completa:** portada + capítulos 1–5 + pie. `npm run build` sin errores.
+- **Demo publicada:** https://yeiner99sd.github.io/la-salchicheria-demo/ (repo público Yeiner99SD/la-salchicheria-demo). Cada push a `main` despliega con GitHub Actions; la demo lleva `noindex` (`PUBLIC_DEMO=true`).
 - **Salchi provisional:** no hay SVG todavía. `src/components/SalchiRail.astro` usa una chapa con el logo oficial como cabeza y un punto como cola. Al llegar el SVG, sustituir solo `.salchi-cola` y `.salchi-cabeza`.
 - `src/assets/marca/salchi-blanco.png` / `salchi-rojo.png`: el logo oficial con fondo transparente (generados desde `marca/logo.jpg`, sin redibujar).
 - **Fotos provisionales:** `<FotoProvisional>` (fondo plano + ilustración de línea + etiqueta "[Foto: …]"). Lista en `src/data/fotos.md`. Sustituir por `<Picture>` cuando lleguen.
