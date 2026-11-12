@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets';
+import salchiBlanco from '../assets/marca/salchi-blanco.png';
+import AbiertoAhora from './AbiertoAhora.astro';
+import { NEGOCIO } from '../data/negocio';
+
+const desliza = Array.from({ length: 8 }, () => 'DESLIZA');
+import Icono from './Icono.astro';
+---
+
+<header id="portada" data-portada class="relative flex min-h-svh flex-col overflow-hidden bg-rojo text-blanco">
+  <!-- Barra superior. El logotipo con texto llegará con los archivos de marca: aquí va texto plano, no una imitación -->
+  <div class="con-rail flex items-center justify-between gap-4 px-4 pt-4 text-[11px] uppercase tracking-[0.18em] sm:px-8 sm:text-xs">
+    <span class="font-bold">La Salchichería · Oeste 7</span>
+    <a href={NEGOCIO.instagram} class="underline-offset-4 hover:underline" rel="noopener" target="_blank">
+      {NEGOCIO.instagramUser}<span class="sr-only"> (Instagram, se abre en otra pestaña)</span>
+    </a>
+  </div>
+
+  <div class="con-rail relative flex flex-1 flex-col items-center justify-center px-4 pt-6 pb-4 text-center sm:px-8">
+    <!-- Salchi encogido (logo oficial en blanco). PROVISIONAL hasta tener el SVG -->
+    <div data-portada-salchi class="respira mb-6 w-[38vw] max-w-[190px] min-w-[130px] sm:mb-8">
+      <Image
+        src={salchiBlanco}
+        alt="Salchi, el perro salchicha con gafas de sol de La Salchichería"
+        widths={[200, 350]}
+        sizes="(min-width: 640px) 190px, 38vw"
+        loading="eager"
+        fetchpriority="high"
+        class="h-auto w-full"
+      />
+    </div>
+
+    <h1 class="font-titular leading-[0.92] text-balance uppercase">
+      <span class="sr-only">La Salchichería, bar en la Plaza del Oeste de Salamanca. </span>
+      <span data-lema class="block text-[clamp(2.1rem,10.5vw,6.5rem)]">Hambre no vais a pasar</span>
+      <span data-lema class="mt-2 block font-condensada text-[clamp(1.6rem,7vw,4rem)] font-normal tracking-wide text-blanco/90 italic">
+        · Sed tampoco ·
+      </span>
+    </h1>
+
+    <div data-portada-info class="mt-8 flex flex-col items-center gap-5">
+      <AbiertoAhora />
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a href={NEGOCIO.comoLlegar} class="btn bg-blanco text-rojo" rel="noopener" target="_blank">
+          Cómo llegar <Icono nombre="flecha" /><span class="sr-only"> (Google Maps, se abre en otra pestaña)</span>
+        </a>
+        <a href="#comer" class="btn border-2 border-blanco text-blanco">Ver la carta</a>
+      </div>
+      <p class="text-xs">{NEGOCIO.direccion.calle} · {NEGOCIO.direccion.ciudad}</p>
+    </div>
+  </div>
+
+  <!-- Pista de "desliza" -->
+  <a href="#comer" class="block border-t-2 border-blanco/30 py-3 text-blanco">
+    <span class="sr-only">Desliza para entrar al bar</span>
+    <div class="overflow-hidden" aria-hidden="true">
+      <div class="marquesina font-condensada text-2xl tracking-wider sm:text-3xl">
+        {[0, 1].map(() => (
+          <span class="flex shrink-0">
+            {desliza.map((d) => <span class="px-4">{d} <Icono nombre="abajo" class="inline-block size-[0.8em] align-[-0.05em]" /></span>)}
+          </span>
+        ))}
+      </div>
+    </div>
+  </a>
+</header>

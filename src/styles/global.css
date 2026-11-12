@@ -1,0 +1,111 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* ─────────────────────────────────────────────
+   Tokens de marca · La Salchichería
+   Rojo muestreado del logo (#D91C1E) y de la pieza de Instagram (#DD0828).
+   Si llega el manual de marca, sus valores mandan.
+   ───────────────────────────────────────────── */
+@theme {
+  /* Colores de marca: rojo y blanco. Nada más. */
+  --color-rojo: #df0b27;
+  --color-rojo-oscuro: #a8071d;
+  --color-blanco: #ffffff;
+
+  /* Acentos sacados de las fotos: usar con moderación */
+  --color-roto: #f6f1e9; /* blanco roto de azulejo */
+  --color-peltre: #1e2f8f; /* borde azul de los platos de peltre */
+  --color-cerveza: #e9a23b; /* dorado caña */
+  --color-junta: #56735f; /* verde de junta (oscurecido para contraste AA con blanco) */
+
+  /* Voces tipográficas */
+  --font-titular: "Archivo Black", "Arial Black", system-ui, sans-serif; /* COCINA ABIERTA, nombres de plato */
+  --font-condensada: "Anton", "Impact", "Arial Narrow", sans-serif; /* LUNES A DOMINGO, titulares gigantes */
+  --font-mono: "Space Mono", ui-monospace, "Courier New", monospace; /* ticket: precios, horario, info práctica */
+  --font-mano: "Permanent Marker", "Comic Sans MS", cursive; /* rotulado a mano: PINTXOS, HUERTA */
+
+  --ease-salchi: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-blanco text-rojo font-mono antialiased;
+    overflow-x: clip;
+  }
+  ::selection {
+    @apply bg-rojo text-blanco;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-peltre);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Hueco a la derecha para que la cabeza de Salchi no tape texto en móvil */
+  .con-rail {
+    padding-right: 3.75rem;
+  }
+  @media (min-width: 768px) {
+    .con-rail {
+      padding-right: 5rem;
+    }
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-titular text-sm uppercase tracking-wide transition-transform duration-200;
+    min-height: 48px;
+  }
+  .btn:hover {
+    transform: translateY(-2px) rotate(-1deg);
+  }
+}
+
+/* Marquesina tipo "DESLIZA DESLIZA DESLIZA" */
+.marquesina {
+  display: flex;
+  width: max-content;
+  animation: marquesina 18s linear infinite;
+}
+@keyframes marquesina {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Salchi en portada: respira encogido */
+.respira {
+  animation: respira 3.2s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+@keyframes respira {
+  50% {
+    transform: scaleY(1.035) scaleX(0.985);
+  }
+}
+
+/* Galería horizontal: sin JS o con movimiento reducido, se desliza a mano */
+.galeria {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.galeria > * > * {
+  scroll-snap-align: center;
+}
+html.motion .galeria {
+  overflow: hidden;
+  scroll-snap-type: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

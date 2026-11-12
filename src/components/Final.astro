@@ -1,0 +1,104 @@
+---
+import { Image } from 'astro:assets';
+import salchiRojo from '../assets/marca/salchi-rojo.png';
+import cocinaAbierta from '../assets/marca/ig-cocina-abierta.jpg';
+import AbiertoAhora from './AbiertoAhora.astro';
+import { NEGOCIO } from '../data/negocio';
+import { HORARIO_LEGIBLE } from '../lib/horario';
+
+import Icono from './Icono.astro';
+---
+
+<section id="final" aria-labelledby="final-titulo" class="bg-blanco text-rojo">
+  <div class="con-rail mx-auto max-w-6xl px-4 pt-24 pb-16 sm:px-8 sm:pt-32">
+    <p class="font-mano text-xl -rotate-2 sm:text-2xl">Capítulo 5 · Y ya está</p>
+    <h2 id="final-titulo" class="mt-3">
+      <span data-pregunta class="block font-condensada text-[clamp(3.25rem,15vw,9rem)] leading-[0.9] uppercase">¿Hacéis reservas?</span>
+      <span data-respuesta class="mt-3 block font-titular text-[clamp(2rem,9vw,5.5rem)] leading-[0.95] uppercase">
+        No, solo tienes que venir.
+      </span>
+    </h2>
+    <p data-respuesta class="mt-5 text-base sm:text-lg">Según llegas te hacemos hueco.</p>
+  </div>
+
+  <div class="bg-rojo text-blanco">
+    <div class="con-rail mx-auto grid max-w-6xl items-center gap-14 px-4 py-20 sm:px-8 md:grid-cols-[1.1fr_1fr]">
+      <!-- Ticket -->
+      <div data-ticket class="mx-auto w-full max-w-md -rotate-1 drop-shadow-[0_12px_0_var(--color-rojo-oscuro)]">
+      <div class="ticket bg-blanco px-6 py-10 text-rojo sm:px-8">
+        <p class="text-center font-titular text-lg uppercase">La Salchichería · Oeste 7</p>
+        <p class="mt-1 text-center text-xs">{NEGOCIO.direccion.calle} · {NEGOCIO.direccion.cp} {NEGOCIO.direccion.ciudad}</p>
+
+        <hr class="my-5 border-t-2 border-dashed border-rojo" />
+        <p class="text-xs font-bold tracking-[0.2em] uppercase">Horario</p>
+        <dl class="mt-2 space-y-2 text-sm">
+          {HORARIO_LEGIBLE.map((h) => (
+            <div class="flex flex-wrap justify-between gap-x-4">
+              <dt>{h.dias}</dt>
+              <dd class="font-bold">{h.horas}</dd>
+            </div>
+          ))}
+        </dl>
+        <div class="mt-4"><AbiertoAhora tono="sobre-blanco" /></div>
+
+        <hr class="my-5 border-t-2 border-dashed border-rojo" />
+        <dl class="space-y-2 text-sm">
+          <div class="flex justify-between gap-4"><dt>Reservas</dt><dd class="font-bold">No hacen falta</dd></div>
+          <div class="flex justify-between gap-4"><dt>Teléfono</dt><dd class="font-bold">{NEGOCIO.telefono}</dd></div>
+          <div class="flex justify-between gap-4">
+            <dt>Instagram</dt>
+            <dd class="font-bold"><a href={NEGOCIO.instagram} class="underline underline-offset-4" rel="noopener" target="_blank">{NEGOCIO.instagramUser}</a></dd>
+          </div>
+        </dl>
+
+        <hr class="my-5 border-t-2 border-dashed border-rojo" />
+        <div class="flex justify-between font-titular text-lg uppercase">
+          <span>Total</span><span>Hambre 0 · Sed 0</span>
+        </div>
+        <p class="mt-1 text-center text-xs">Gracias por su visita. Vuelva pronto (mañana vale).</p>
+
+        <div class="mt-6 flex flex-col gap-3">
+          <a href={NEGOCIO.comoLlegar} class="btn bg-rojo text-blanco" rel="noopener" target="_blank">
+            Cómo llegar <Icono nombre="flecha" /><span class="sr-only"> (Google Maps, se abre en otra pestaña)</span>
+          </a>
+          <a href={NEGOCIO.instagram} class="btn border-2 border-rojo text-rojo" rel="noopener" target="_blank">
+            Síguenos en Instagram<span class="sr-only"> (se abre en otra pestaña)</span>
+          </a>
+        </div>
+      </div>
+      </div>
+
+      <!-- Salchi celebra -->
+      <div class="mx-auto flex w-full max-w-sm flex-col items-center text-center">
+        <div class="flex w-full items-end justify-center gap-4">
+        <div data-final-cartel class="order-2 mb-6 w-[36%] rotate-[7deg] shadow-[0_10px_0_-2px_var(--color-rojo-oscuro)]">
+          <Image
+            src={cocinaAbierta}
+            alt="Cartel de La Salchichería: cocina abierta de lunes a domingo, con cazos y espumaderas colgando."
+            widths={[200, 400]}
+            sizes="160px"
+            class="h-auto w-full"
+          />
+        </div>
+        <div data-final-salchi class="grid aspect-square w-[56%] max-w-[220px] origin-bottom place-items-center rounded-full bg-blanco">
+          <Image src={salchiRojo} alt="Salchi, la mascota, celebrando que has llegado al final" widths={[160, 320]} sizes="150px" class="h-[72%] w-auto" />
+        </div>
+        </div>
+        <p class="mt-6 font-mano text-2xl -rotate-2 sm:text-3xl">La vida según Salchi:</p>
+        <p class="mt-2 font-titular text-xl uppercase">Si has llegado hasta aquí, ya tienes hambre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<style>
+  /* bordes troquelados del ticket */
+  .ticket {
+    --d: 7px;
+    mask:
+      radial-gradient(circle var(--d) at 50% 0, #0000 98%, #000) top / 18px 51% repeat-x,
+      radial-gradient(circle var(--d) at 50% 100%, #0000 98%, #000) bottom / 18px 51% repeat-x;
+  }
+</style>

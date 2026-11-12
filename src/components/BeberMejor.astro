@@ -1,0 +1,93 @@
+---
+import TituloCapitulo from './TituloCapitulo.astro';
+import FotoProvisional from './FotoProvisional.astro';
+import { BEBIDAS } from '../data/negocio';
+
+const burbujas = [
+  [70, 250, 3], [95, 210, 2.5], [120, 260, 3.5], [85, 160, 2], [130, 190, 2.5], [105, 120, 3], [75, 100, 2],
+];
+---
+
+<section id="beber" aria-labelledby="beber-titulo" class="bg-rojo text-blanco">
+  <TituloCapitulo
+    numero={2}
+    id="beber-titulo"
+    titulo={['Beber', 'mejor']}
+    sub="Cañas bien tiradas, vinos con nombre y sangría de la de siempre. Sed no vais a pasar, ya lo avisamos."
+  />
+
+  <!-- La caña que se llena con el scroll -->
+  <div data-cana class="relative flex min-h-svh items-center py-12">
+    <div class="con-rail mx-auto grid w-full max-w-6xl items-center gap-10 px-4 sm:px-8 md:grid-cols-2">
+      <svg viewBox="0 0 200 300" class="mx-auto w-[48vw] max-w-[280px]" aria-hidden="true">
+        <defs>
+          <clipPath id="vaso-clip"><path d="M40 30h120l-14 250H54z"></path></clipPath>
+        </defs>
+        <g clip-path="url(#vaso-clip)">
+          <g data-liquido>
+            <rect x="0" y="52" width="200" height="260" fill="var(--color-cerveza)"></rect>
+            {burbujas.map(([cx, cy, r]) => <circle data-burbuja cx={cx} cy={cy} r={r} fill="#fff" opacity="0.55" />)}
+            <path d="M0 52c20-14 30 6 50-6s30 8 50-4 30 8 50-4 30 6 50 0v20H0z" fill="#fff"></path>
+            <rect x="0" y="22" width="200" height="34" fill="#fff"></rect>
+          </g>
+        </g>
+        <path d="M40 30h120l-14 250H54z" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"></path>
+        <path d="M58 60l-6 190" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0.6"></path>
+      </svg>
+
+      <div>
+        <p class="font-mano text-2xl -rotate-1">{BEBIDAS.cana.nombre}</p>
+        <p class="mt-1 font-titular text-[clamp(2rem,8.5vw,4rem)] leading-[0.95] uppercase">
+          Dos dedos de espuma. Ni uno más.
+        </p>
+        <p class="mt-5 max-w-sm text-sm leading-relaxed sm:text-base">
+          Bien fría y tirada sin prisa, que lo bueno se hace esperar (poco).
+        </p>
+        <p class="mt-4 inline-block border-2 border-blanco px-3 py-1 font-bold">Caña · {BEBIDAS.cana.precio}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reveal de fotos con máscara -->
+  <div class="con-rail mx-auto grid max-w-6xl gap-14 px-4 pt-8 pb-24 sm:px-8 md:grid-cols-3 md:gap-8">
+    <article>
+      <div data-revela class="overflow-hidden rounded-[1.5rem]">
+        <div data-revela-img>
+          <FotoProvisional foto="caña tirándose del grifo, con flash" icono="cana" tono="cerveza" />
+        </div>
+      </div>
+      <h3 class="mt-5 font-titular text-2xl uppercase">Cañas</h3>
+      <p class="mt-1 text-sm leading-relaxed">Del grifo a la mesa sin escalas. Y si es doble, tampoco te vamos a juzgar.</p>
+    </article>
+
+    <article class="md:mt-24">
+      <div data-revela class="overflow-hidden rounded-[1.5rem]">
+        <div data-revela-img>
+          <FotoProvisional foto="copas de vino blanco en la barra" icono="copa" tono="blanco" />
+        </div>
+      </div>
+      <h3 class="mt-5 font-titular text-2xl uppercase">Vinitos</h3>
+      <ul class="mt-2 space-y-3 text-sm leading-snug">
+        {BEBIDAS.vinos.map((v) => (
+          <li class="border-b-2 border-dashed border-blanco/60 pb-2">
+            <span class="flex items-baseline justify-between gap-3 font-bold uppercase">
+              <span>{v.nombre}</span><span class="shrink-0">{v.precio}</span>
+            </span>
+            {v.desc}
+          </li>
+        ))}
+      </ul>
+      <p class="mt-2 text-xs">Precio por botella. [Resto de la carta de vinos pendiente]</p>
+    </article>
+
+    <article class="md:mt-48">
+      <div data-revela class="overflow-hidden rounded-[1.5rem]">
+        <div data-revela-img>
+          <FotoProvisional foto="jarra de sangría con fruta" icono="jarra" tono="peltre" />
+        </div>
+      </div>
+      <h3 class="mt-5 font-titular text-2xl uppercase">Sangría</h3>
+      <p class="mt-1 text-sm leading-relaxed">La de toda la vida, para compartir en la terraza. {BEBIDAS.sangria.precio}</p>
+    </article>
+  </div>
+</section>

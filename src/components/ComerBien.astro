@@ -1,0 +1,128 @@
+---
+import { Image, Picture } from 'astro:assets';
+import carta from '../assets/fotos/carta.jpg';
+import cocinero from '../assets/fotos/cocinero-camiseta.jpg';
+import { CARTA } from '../data/negocio';
+import TituloCapitulo from './TituloCapitulo.astro';
+
+const textosZoom = [
+  'La carta, en una hoja. Sin rodeos.',
+  'Hasta Salchi tiene hambre.',
+  'Los clásicos. Para compartir (o no).',
+];
+---
+
+<section id="comer" aria-labelledby="comer-titulo" class="bg-blanco text-rojo">
+  <!-- 1 · Título del capítulo -->
+  <TituloCapitulo
+    numero={1}
+    id="comer-titulo"
+    titulo={['Comer', 'bien']}
+    sub="Pintxos, clásicos para compartir y algo de huerta. Para que luego no digan."
+  />
+
+  <!-- 2 · Foto protagonista fijada con zoom.
+       Ahora es la carta (la única foto de producto en alta). Cuando lleguen las de perritos, valorar cambiarla. -->
+  <div data-zoom class="relative flex min-h-svh flex-col items-center justify-center overflow-hidden py-6">
+    <div
+      data-zoom-img
+      class="relative"
+      style="aspect-ratio: 3273 / 4096; height: min(82svh, calc(88vw * 1.2514));"
+    >
+      <Picture
+        src={carta}
+        formats={['avif', 'webp']}
+        widths={[480, 800, 1200, 1800]}
+        sizes="(min-width: 768px) 130svh, 176vw"
+        alt="La carta de La Salchichería en hojas con anilla: pintxos, los clásicos para compartir, huerta y vinos blancos, impresa en rojo y con Salchi sujetando un bocadillo."
+        class="h-full w-full"
+        pictureAttributes={{ class: 'block h-full w-full' }}
+      />
+    </div>
+
+    <ol class="zoom-textos con-rail mt-6 w-full px-4 sm:px-8">
+      {textosZoom.map((t, i) => (
+        <li data-zoom-texto class="w-fit bg-rojo px-3 py-2 font-titular text-base text-blanco uppercase shadow-[4px_4px_0_var(--color-peltre)] sm:text-xl" style={`rotate: ${i % 2 ? 1.5 : -1.5}deg`}>
+          {t}
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <!-- 3 · Galería horizontal: platos de peltre -->
+  <div data-galeria-wrap class="relative flex min-h-svh flex-col justify-center overflow-hidden py-14">
+    <div class="con-rail px-4 sm:px-8">
+      <p class="font-mano text-lg -rotate-1 sm:text-xl">En plato de peltre</p>
+      <h3 class="font-titular text-[clamp(1.9rem,8vw,4rem)] leading-none uppercase">Como Dios manda</h3>
+    </div>
+
+    <div data-galeria class="galeria mt-8 pb-4" tabindex="0" aria-label="Platos de la carta (desliza en horizontal)">
+      <ul data-track class="flex w-max items-start gap-5 px-4 sm:gap-8 sm:px-8">
+        <li data-plato class="w-[70vw] max-w-[300px] shrink-0">
+          <Image
+            src={cocinero}
+            alt="Un cocinero de espaldas en la cocina, con la camiseta blanca de Salchi en rojo y delantal negro."
+            widths={[300, 480]}
+            sizes="(min-width: 640px) 300px, 70vw"
+            class="aspect-[4/5] w-full rounded-[2rem] object-cover"
+          />
+          <p class="mt-4 font-titular text-lg uppercase">La cocina</p>
+          <p class="text-sm">Abierta de lunes a domingo.</p>
+        </li>
+
+        {CARTA.map((p) => (
+          <li data-plato class="w-[70vw] max-w-[300px] shrink-0">
+            <div class="plato grid aspect-square place-items-center rounded-full border-[12px] border-peltre bg-blanco p-8 text-center">
+              <div>
+                <p class="font-mono text-[11px] tracking-[0.2em] text-peltre uppercase">{p.seccion}</p>
+                <p class="mt-1 font-titular text-xl leading-tight uppercase sm:text-2xl">{p.nombre}</p>
+                <p class="mt-3 font-mono text-[10px] tracking-widest text-peltre uppercase">[Foto pendiente]</p>
+              </div>
+            </div>
+            <div class="mt-4 flex items-baseline justify-between gap-3 border-b-2 border-dashed border-rojo pb-2">
+              <p class="font-titular text-base uppercase">{p.nombre}</p>
+              <p class="shrink-0 font-bold">{p.precio}</p>
+            </div>
+            {p.desc && <p class="mt-2 text-sm leading-snug">{p.desc}</p>}
+          </li>
+        ))}
+
+        <li data-plato class="w-[70vw] max-w-[300px] shrink-0">
+          <div class="grid aspect-square place-items-center rounded-full bg-rojo p-8 text-center text-blanco">
+            <div>
+              <p class="font-mano text-2xl">Y perritos,</p>
+              <p class="font-titular text-3xl uppercase">claro</p>
+            </div>
+          </div>
+          <div class="mt-4 flex items-baseline justify-between gap-3 border-b-2 border-dashed border-rojo pb-2">
+            <p class="font-titular text-base uppercase">Perritos</p>
+            <p class="shrink-0 font-bold">[PRECIO]</p>
+          </div>
+          <p class="mt-2 text-sm leading-snug">La razón del nombre. [Foto y carta de perritos pendientes]</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .plato {
+    /* aro interior del plato de peltre */
+    box-shadow: inset 0 0 0 6px var(--color-blanco), inset 0 0 0 8px color-mix(in srgb, var(--color-peltre) 35%, transparent);
+  }
+  .zoom-textos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  /* Con movimiento: los textos se apilan en la misma celda y GSAP los va cambiando */
+  :global(html.motion) .zoom-textos {
+    position: absolute;
+    left: 0;
+    bottom: 1.5rem;
+    display: grid;
+  }
+  :global(html.motion) .zoom-textos > li {
+    grid-area: 1 / 1;
+  }
+</style>

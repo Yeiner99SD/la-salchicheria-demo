@@ -1,0 +1,112 @@
+---
+/**
+ * Salchi como barra de progreso: la cola se queda arriba, la cabeza baja con el scroll
+ * y entre ambas se estira el cuerpo (trazo en rojo de marca).
+ *
+ * ⚠️ PROVISIONAL hasta recibir el SVG oficial de Salchi.
+ *    Cuando llegue: sustituir el contenido de .salchi-cola y .salchi-cabeza por los
+ *    grupos <g> de cola y cabeza del SVG. El cuerpo y la lógica (--p) no cambian.
+ *    Mientras tanto, la cabeza es una chapa con el logo oficial (sin redibujar).
+ */
+import { Image } from 'astro:assets';
+import salchi from '../assets/marca/salchi-rojo.png';
+---
+
+<div class="salchi-rail" data-salchi aria-hidden="true">
+  <div class="salchi-cola">
+    <span class="block size-2.5 rounded-full bg-rojo"></span>
+  </div>
+  <div class="salchi-cuerpo"></div>
+  <div class="salchi-cabeza">
+    <Image data-salchi-img src={salchi} alt="" width={64} densities={[1, 2]} class="h-[78%] w-auto" loading="eager" />
+    <span data-salchi-guau class="salchi-guau">¡Guau!</span>
+  </div>
+</div>
+
+<style>
+  .salchi-rail {
+    --p: 0; /* progreso 0 → 1, lo pone el JS */
+    --recorrido: 0px; /* alto disponible para la cabeza, lo pone el JS */
+    --cabeza: 44px;
+    position: fixed;
+    z-index: 50;
+    top: 4.25rem;
+    bottom: 0.75rem;
+    right: 0.5rem;
+    width: var(--cabeza);
+    pointer-events: none;
+    opacity: var(--visible, 1);
+    transition: opacity 0.4s ease;
+  }
+  @media (min-width: 768px) {
+    .salchi-rail {
+      --cabeza: 56px;
+      right: 1.25rem;
+    }
+  }
+
+  .salchi-cola {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: var(--color-blanco);
+    border: 2.5px solid var(--color-rojo);
+  }
+
+  .salchi-cuerpo {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 8px;
+    height: calc(var(--recorrido) + var(--cabeza) / 2);
+    translate: -50% 0;
+    transform: scaleY(var(--p));
+    transform-origin: 50% 0;
+    background: var(--color-rojo);
+    border-radius: 999px;
+    /* borde blanco: se ve igual sobre rojo que sobre blanco */
+    box-shadow: 0 0 0 2px var(--color-blanco);
+  }
+
+  .salchi-cabeza {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--cabeza);
+    height: var(--cabeza);
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--color-blanco);
+    border: 2.5px solid var(--color-rojo);
+    box-shadow: 0 0 0 2px var(--color-blanco);
+    transform: translateY(calc(var(--p) * var(--recorrido))) rotate(var(--giro, 0deg));
+    will-change: transform;
+  }
+
+  /* bocadillo de la celebración final */
+  .salchi-guau {
+    position: absolute;
+    right: calc(100% + 8px);
+    top: 50%;
+    translate: 0 -50%;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    background: var(--color-blanco);
+    color: var(--color-rojo);
+    border: 2.5px solid var(--color-rojo);
+    font-family: var(--font-titular);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    scale: 0.4;
+    transform-origin: right center;
+  }
+</style>

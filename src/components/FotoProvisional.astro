@@ -1,0 +1,59 @@
+---
+/**
+ * Marcador de foto PROVISIONAL con estilo de marca: fondo plano + ilustración de línea blanca
+ * + etiqueta con la foto que debe ir aquí. Cuando llegue la foto real, sustituir este
+ * componente por <Picture src={...} alt="..." /> en el mismo sitio.
+ */
+type Icono = 'cana' | 'copa' | 'jarra' | 'local' | 'barra' | 'plaza' | 'brindis' | 'perrito';
+
+interface Props {
+  foto: string; // descripción de la foto que falta (también sirve de alt provisional)
+  icono: Icono;
+  tono?: 'rojo' | 'peltre' | 'cerveza' | 'junta' | 'blanco';
+  ratio?: string;
+  class?: string;
+}
+const { foto, icono, tono = 'rojo', ratio = '4 / 5', class: clase } = Astro.props;
+
+const fondos = {
+  rojo: 'bg-rojo text-blanco',
+  peltre: 'bg-peltre text-blanco',
+  cerveza: 'bg-cerveza text-peltre',
+  junta: 'bg-junta text-blanco',
+  blanco: 'bg-blanco text-rojo border-2 border-rojo',
+};
+
+// Ilustraciones de línea originales (objetos, no el personaje). Trazo: currentColor.
+const iconos: Record<Icono, string> = {
+  cana: `<path d="M30 22h40l-5 70H35z"/><path d="M28 22c0-8 8-10 12-8 3-7 15-7 18 0 5-3 14 0 12 8"/><path d="M38 40h24M40 56h20" opacity=".5"/>`,
+  copa: `<path d="M32 12h36c0 22-6 36-18 36S32 34 32 12z"/><path d="M50 48v36M36 88h28"/><path d="M35 26h30" opacity=".5"/>`,
+  jarra: `<path d="M28 20h40l-4 70H32z"/><path d="M68 34c12 0 12 26 0 26"/><circle cx="44" cy="48" r="8"/><path d="M54 66l8 8M36 70l6-6" opacity=".6"/>`,
+  local: `<path d="M14 40h72v50H14z"/><path d="M10 26h80l-6 14H16z"/><path d="M22 26l-4 14M38 26l-2 14M54 26l2 14M70 26l4 14"/><path d="M26 58h22v32H26zM58 56h20v16H58z"/>`,
+  barra: `<path d="M10 40h80M16 40v50M84 40v50"/><path d="M30 40V22h4v18M44 40V16h4v24M60 40V24h6v16"/><path d="M28 64h14M30 64v24M40 64v24M58 64h14M60 64v24M70 64v24"/>`,
+  plaza: `<circle cx="70" cy="30" r="14"/><path d="M70 44v40"/><path d="M14 72h40M18 72v14M50 72v14M14 64h40"/><path d="M8 88h84"/>`,
+  brindis: `<path d="M22 30l26-6 6 40-22 6z"/><path d="M78 30l-26-6-6 40 22 6z"/><path d="M44 10l-2-8M56 10l2-8M50 12V2" stroke-dasharray="2 4"/>`,
+  perrito: `<path d="M12 56c0-10 76-10 76 0s-76 10-76 0z"/><path d="M10 50c4-14 76-14 80 0"/><path d="M22 46c8-6 14 6 22 0s14 6 22 0 14 6 18 0"/>`,
+};
+---
+
+<div
+  class:list={['relative grid place-items-center overflow-hidden', fondos[tono], clase]}
+  style={`aspect-ratio: ${ratio}`}
+  role="img"
+  aria-label={`Foto provisional: ${foto}`}
+>
+  <svg
+    viewBox="0 0 100 100"
+    class="w-[42%] max-w-[180px]"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    set:html={iconos[icono]}
+  />
+  <span aria-hidden="true" class="absolute inset-x-3 bottom-3 font-mono text-[10px] leading-snug tracking-wider uppercase sm:text-[11px]">
+    [Foto: {foto}]
+  </span>
+</div>

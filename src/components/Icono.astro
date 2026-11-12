@@ -1,0 +1,15 @@
+---
+/** Iconos en SVG para no depender de glifos (→ ↓ ★) que las fuentes web no traen. */
+interface Props {
+  nombre: 'flecha' | 'abajo' | 'estrella';
+  class?: string;
+}
+const { nombre, class: clase = 'inline-block size-[0.9em] align-[-0.1em]' } = Astro.props;
+const trazos = {
+  flecha: '<path d="M3 10h13M11 4l6 6-6 6"/>',
+  abajo: '<path d="M10 2v15M4 11l6 6 6-6"/>',
+  estrella: '<path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6L10 15l-5.4 3 1.2-6L1.3 7.8l6.1-.7z" fill="currentColor" stroke="none"/>',
+};
+---
+
+<svg viewBox="0 0 20 20" class={clase} fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={trazos[nombre]} />

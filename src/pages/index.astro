@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import SalchiRail from '../components/SalchiRail.astro';
+import Portada from '../components/Portada.astro';
+import ComerBien from '../components/ComerBien.astro';
+import BeberMejor from '../components/BeberMejor.astro';
+import PasearLoJusto from '../components/PasearLoJusto.astro';
+import Catadores from '../components/Catadores.astro';
+import Final from '../components/Final.astro';
+import Pie from '../components/Pie.astro';
+---
+
+<Base>
+  <SalchiRail />
+  <Portada />
+  <main id="contenido">
+    <ComerBien />
+    <BeberMejor />
+    <PasearLoJusto />
+    <Catadores />
+    <Final />
+  </main>
+  <Pie />
+</Base>
+
+<script>
+  import '../scripts/movimiento';
+</script>

@@ -1,0 +1,20 @@
+---
+import { NEGOCIO } from '../data/negocio';
+const lemas = ['Comer bien', 'Beber mejor', 'Pasear lo justo'];
+---
+
+<footer class="overflow-hidden bg-rojo pb-8 text-blanco">
+  <div class="border-y-2 border-blanco/30 py-4" aria-hidden="true">
+    <div class="marquesina font-condensada text-3xl tracking-wide uppercase sm:text-5xl">
+      {[0, 1].map(() => (
+        <span class="flex shrink-0">
+          {[0, 1, 2].map(() => lemas.map((l) => <span class="px-5">{l} <span class="px-3">|</span></span>))}
+        </span>
+      ))}
+    </div>
+  </div>
+  <div class="con-rail mx-auto flex max-w-6xl flex-col gap-2 px-4 pt-8 text-xs sm:flex-row sm:justify-between sm:px-8">
+    <p>© 2026 {NEGOCIO.nombre} · {NEGOCIO.direccion.calle} · {NEGOCIO.direccion.cp} {NEGOCIO.direccion.ciudad}</p>
+    <p>Hambre no vais a pasar · Sed tampoco</p>
+  </div>
+</footer>

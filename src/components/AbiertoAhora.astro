@@ -1,0 +1,45 @@
+---
+/** Pastilla "¿Estamos abiertos ahora?". Se calcula en el navegador con la hora de Madrid. */
+import { HORARIO_LEGIBLE } from '../lib/horario';
+
+interface Props {
+  tono?: 'sobre-rojo' | 'sobre-blanco';
+}
+const { tono = 'sobre-rojo' } = Astro.props;
+---
+
+<p
+  data-abierto
+  class:list={[
+    'inline-flex items-center gap-2.5 rounded-full border-2 px-4 py-2 text-xs leading-tight sm:text-sm',
+    tono === 'sobre-rojo' ? 'border-blanco/70 text-blanco' : 'border-rojo text-rojo',
+  ]}
+  aria-live="polite"
+>
+  <span class="relative flex size-2.5 shrink-0">
+    <span data-abierto-ping class="absolute inset-0 hidden animate-ping rounded-full bg-current opacity-60"></span>
+    <span data-abierto-punto class="relative size-2.5 rounded-full bg-current opacity-50"></span>
+  </span>
+  <span>
+    <strong data-abierto-texto class="font-bold uppercase">¿Estamos abiertos?</strong>
+    <span data-abierto-detalle>
+      {HORARIO_LEGIBLE.map((h) => `${h.dias} ${h.horas}`).join(' · ')}
+    </span>
+  </span>
+</p>
+
+<script>
+  import { estadoAhora } from '../lib/horario';
+
+  function pintar() {
+    const e = estadoAhora();
+    document.querySelectorAll<HTMLElement>('[data-abierto]').forEach((el) => {
+      el.querySelector('[data-abierto-texto]')!.textContent = e.texto;
+      el.querySelector('[data-abierto-detalle]')!.textContent = ' · ' + e.detalle;
+      el.querySelector('[data-abierto-ping]')!.classList.toggle('hidden', !e.abierto);
+      el.querySelector('[data-abierto-punto]')!.classList.toggle('opacity-50', !e.abierto);
+    });
+  }
+  pintar();
+  setInterval(pintar, 60_000);
+</script>

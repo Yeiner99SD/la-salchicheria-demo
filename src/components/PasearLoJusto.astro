@@ -1,0 +1,85 @@
+---
+import TituloCapitulo from './TituloCapitulo.astro';
+import FotoProvisional from './FotoProvisional.astro';
+import { NEGOCIO, MAPA_EMBED } from '../data/negocio';
+
+const patron = Array.from({ length: 40 }, () => 'OESTE 7').join(' · ');
+import Icono from './Icono.astro';
+---
+
+<section id="pasear" aria-labelledby="pasear-titulo" class="bg-blanco text-rojo">
+  <TituloCapitulo
+    numero={3}
+    id="pasear-titulo"
+    titulo={['Pasear', 'lo justo']}
+    sub="Plaza del Oeste, 7. En pleno Barrio del Oeste, entre murales y terrazas, a un paseo del centro. Lo justo para bajar las bravas."
+  />
+
+  <!-- Collage en parallax -->
+  <div data-collage class="con-rail relative mx-auto max-w-6xl px-4 pb-16 sm:px-8">
+    <div class="grid grid-cols-6 gap-4 md:gap-6">
+      <div data-velocidad="-12" class="col-span-4 -rotate-2 md:col-span-3">
+        <FotoProvisional foto="la fachada de La Salchichería desde la plaza" icono="local" tono="rojo" ratio="4 / 5" class="rounded-[1.5rem]" />
+      </div>
+      <div data-velocidad="18" class="col-span-3 col-start-4 mt-[-30%] rotate-3 md:col-span-2 md:col-start-5 md:mt-24">
+        <FotoProvisional foto="la barra con azulejo blanco y junta verde" icono="barra" tono="junta" ratio="1 / 1" class="rounded-[1.5rem]" />
+      </div>
+      <div data-velocidad="-6" class="col-span-5 col-start-2 -rotate-1 md:col-span-3 md:col-start-2 md:-mt-24">
+        <FotoProvisional foto="la terraza en la Plaza del Oeste, de tarde" icono="plaza" tono="peltre" ratio="3 / 2" class="rounded-[1.5rem]" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Mapa -->
+  <div class="con-rail mx-auto max-w-6xl px-4 pb-24 sm:px-8">
+    <div class="relative overflow-hidden rounded-[2rem] bg-rojo text-blanco">
+      <p aria-hidden="true" class="pointer-events-none absolute inset-0 font-condensada text-5xl leading-[1.05] break-all text-blanco/10 select-none">
+        {patron}
+      </p>
+
+      <div class="relative grid gap-8 p-6 sm:p-10 md:grid-cols-2 md:items-center">
+        <div>
+          <p class="font-mano text-xl">Dónde estamos</p>
+          <p class="mt-2 font-titular text-[clamp(1.8rem,7vw,3.25rem)] leading-none uppercase">
+            {NEGOCIO.direccion.calle}
+          </p>
+          <p class="mt-2">{NEGOCIO.direccion.cp} {NEGOCIO.direccion.ciudad}</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href={NEGOCIO.comoLlegar} class="btn bg-blanco text-rojo" rel="noopener" target="_blank">
+              Cómo llegar <Icono nombre="flecha" /><span class="sr-only"> (Google Maps, se abre en otra pestaña)</span>
+            </a>
+          </div>
+        </div>
+
+        <div data-mapa class="aspect-[4/3] overflow-hidden rounded-[1.25rem] border-4 border-blanco bg-rojo-oscuro">
+          <button
+            type="button"
+            data-mapa-cargar
+            data-src={MAPA_EMBED}
+            class="grid h-full w-full place-items-center p-6 text-center transition-colors hover:bg-black/10"
+          >
+            <span>
+              <span class="block font-titular text-lg uppercase">Ver el mapa aquí</span>
+              <span class="mt-2 block text-xs">Se cargará Google Maps</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-mapa-cargar]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = btn.dataset.src!;
+      iframe.title = 'Mapa de La Salchichería en la Plaza del Oeste, Salamanca';
+      iframe.className = 'h-full w-full border-0';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      btn.replaceWith(iframe);
+      iframe.focus();
+    });
+  });
+</script>

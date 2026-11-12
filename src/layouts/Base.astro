@@ -1,0 +1,89 @@
+---
+import '@fontsource/archivo-black/latin-400.css';
+import '@fontsource/anton/latin-400.css';
+import '@fontsource/space-mono/latin-400.css';
+import '@fontsource/space-mono/latin-700.css';
+import '@fontsource/permanent-marker/latin-400.css';
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import ogFuente from '../assets/marca/ig-cocina-abierta.jpg';
+import { NEGOCIO } from '../data/negocio';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'La Salchichería · Oeste 7 | Bar de perritos y tapas en Salamanca',
+  description = 'Perritos, pintxos, clásicos para compartir, cañas bien tiradas y vinos en la Plaza del Oeste, 7 (Salamanca). Sin reservas: según llegas te hacemos hueco.',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const og = await getImage({ src: ogFuente, width: 1080, format: 'jpg' });
+const ogUrl = new URL(og.src, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BarOrPub',
+  name: NEGOCIO.nombreCompleto,
+  url: canonical.href,
+  image: ogUrl.href,
+  servesCuisine: ['Tapas', 'Pintxos', 'Perritos calientes'],
+  acceptsReservations: false,
+  priceRange: '€',
+  sameAs: [NEGOCIO.instagram],
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: NEGOCIO.direccion.calle,
+    postalCode: NEGOCIO.direccion.cp,
+    addressLocality: NEGOCIO.direccion.ciudad,
+    addressCountry: NEGOCIO.direccion.pais,
+  },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'], opens: '12:00', closes: '16:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'], opens: '19:00', closes: '23:30' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Friday', 'Saturday', 'Sunday'], opens: '12:00', closes: '23:30' },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="es-ES">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.png`} />
+    {/* La demo pública no debe indexarse como si fuera la web oficial del bar */}
+    {import.meta.env.PUBLIC_DEMO === 'true' && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#df0b27" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content={NEGOCIO.nombreCompleto} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Antes de pintar: marca si hay JS y si se permite movimiento, para no ver saltos -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+    </script>
+  </head>
+  <body>
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-blanco focus:px-4 focus:py-2 focus:font-titular focus:text-rojo"
+      >Saltar al contenido</a
+    >
+    <slot />
+  </body>
+</html>
