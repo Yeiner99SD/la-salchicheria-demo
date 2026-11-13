@@ -33,7 +33,17 @@
   }
   body {
     @apply bg-blanco text-rojo font-mono antialiased;
-    overflow-x: clip;
+  }
+  /* Nada puede ensanchar la página en móvil (si algo se sale, el navegador aleja el zoom
+     y "se rompe" el ancho). hidden para navegadores antiguos; clip donde se entiende,
+     que no crea contenedor de scroll. Los elementos fixed (Salchi, pins) no se recortan. */
+  .lienzo {
+    overflow-x: hidden;
+  }
+  @supports (overflow-x: clip) {
+    .lienzo {
+      overflow-x: clip;
+    }
   }
   ::selection {
     @apply bg-rojo text-blanco;
@@ -45,22 +55,23 @@
 }
 
 @layer components {
-  /* Hueco a la derecha para que la cabeza de Salchi no tape texto en móvil */
-  .con-rail {
-    padding-right: 3.75rem;
-  }
-  @media (min-width: 768px) {
-    .con-rail {
-      padding-right: 5rem;
-    }
-  }
-
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-titular text-sm uppercase tracking-wide transition-transform duration-200;
     min-height: 48px;
   }
   .btn:hover {
     transform: translateY(-2px) rotate(-1deg);
+  }
+}
+
+/* Hueco a la derecha para que la cabeza de Salchi no tape texto.
+   Fuera de @layer a propósito: así gana a px-4 / sm:px-8 de Tailwind en el mismo elemento. */
+.con-rail {
+  padding-right: 3.75rem;
+}
+@media (min-width: 768px) {
+  .con-rail {
+    padding-right: 5rem;
   }
 }
 
@@ -107,5 +118,12 @@ html.motion .galeria {
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* Respaldo de min-h-svh para navegadores que no entienden svh */
+@supports not (height: 100svh) {
+  .min-h-svh {
+    min-height: 100vh;
   }
 }

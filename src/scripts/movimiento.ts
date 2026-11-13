@@ -258,7 +258,7 @@ if (!reducido) {
   tareas.push(() => {
     /* 5 · Final: la respuesta entra con retranca y Salchi se estira de alegría */
     gsap.from('[data-respuesta]', {
-      x: -40,
+      y: 30,
       autoAlpha: 0,
       stagger: 0.25,
       duration: 0.7,
@@ -267,7 +267,7 @@ if (!reducido) {
     });
     gsap.from('[data-ticket]', {
       y: 120,
-      rotation: 6,
+      rotation: 2,
       autoAlpha: 0,
       duration: 1,
       ease: 'power3.out',
@@ -275,7 +275,7 @@ if (!reducido) {
     });
     gsap
       .timeline({ scrollTrigger: { trigger: '[data-final-salchi]', start: 'top 85%' } })
-      .from('[data-final-salchi]', { scaleY: 0.4, scaleX: 1.3, duration: 1, ease: 'elastic.out(1, 0.4)' })
+      .from('[data-final-salchi]', { scaleY: 0.4, scaleX: 1.1, duration: 1, ease: 'elastic.out(1, 0.4)' })
       .from('[data-final-cartel]', { y: -60, rotation: -30, autoAlpha: 0, duration: 0.8, ease: 'back.out(2)' }, 0.2);
   });
 

@@ -1,0 +1,185 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Salchi from '../components/Salchi.astro';
+import AbiertoAhora from '../components/AbiertoAhora.astro';
+import Icono from '../components/Icono.astro';
+import Pie from '../components/Pie.astro';
+import { CARTA_COMPLETA, BEBIDAS, NEGOCIO } from '../data/negocio';
+import { ruta } from '../lib/ruta';
+
+import perritoQueso from '../assets/fotos/perrito-queso.jpg';
+import perritoCamiseta from '../assets/fotos/perrito-camiseta.jpg';
+import anillasRotulo from '../assets/fotos/anillas-rotulo.jpg';
+import anillasAlioli from '../assets/fotos/anillas-alioli.jpg';
+import cartelDePicar from '../assets/fotos/cartel-de-picar.jpg';
+import cartelCanitas from '../assets/fotos/cartel-canitas.jpg';
+
+type Foto = { src: ImageMetadata; alt: string; contener?: boolean };
+
+// Fotos reales que acompañan a cada sección (dos por sección, en tira)
+const FOTOS: Record<string, Foto[]> = {
+  perritos: [
+    {
+      src: perritoQueso,
+      alt: 'Perrito con salchicha, queso fundido, cebolla frita y patatas paja, en su caja de cartón sobre un plato de peltre.',
+    },
+    {
+      src: perritoCamiseta,
+      alt: 'Perrito estilo Salchi con cebolla encurtida rosa, sostenido delante de una camiseta blanca con el logotipo de La Salchichería.',
+    },
+  ],
+  pintxos: [
+    {
+      src: cartelDePicar,
+      alt: 'Ilustración de la marca: Salchi sujetando la carta, con el texto «De picar o de comer».',
+      contener: true,
+    },
+  ],
+  clasicos: [
+    {
+      src: anillasRotulo,
+      alt: 'Unas pinzas sirven anillas a la andaluza en un plato de peltre, con el rótulo «Anillas a la andaluza».',
+    },
+    {
+      src: anillasAlioli,
+      alt: 'Anillas a la andaluza levantadas con pinzas sobre un fondo de texto repetido: «tostado con alioli de ajo».',
+    },
+  ],
+};
+
+const indice = [...CARTA_COMPLETA.map((s) => ({ id: s.id, titulo: s.titulo })), { id: 'beber', titulo: 'Para beber' }];
+---
+
+<Base
+  title="La carta | La Salchichería · Oeste 7 (Salamanca)"
+  description="La carta completa de La Salchichería: perritos, pintxos, clásicos para compartir, huerta, cañas y vinos, con precios. Plaza del Oeste, 7 · Salamanca."
+>
+  <header class="bg-rojo text-blanco">
+    <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 pt-4 text-[11px] uppercase tracking-[0.18em] sm:px-8 sm:text-xs">
+      <a href={ruta()} class="inline-flex min-h-11 items-center gap-2 font-bold underline-offset-4 hover:underline">
+        <Icono nombre="flecha" class="inline-block size-[1.1em] rotate-180" /> Volver al bar
+      </a>
+      <span>{NEGOCIO.direccion.calle}</span>
+    </div>
+
+    <div class="mx-auto flex max-w-3xl items-end gap-5 px-4 pt-8 pb-10 sm:px-8 sm:pt-12">
+      <div class="min-w-0 flex-1">
+        <p class="font-mano text-xl -rotate-2 sm:text-2xl">Hambre no vais a pasar</p>
+        <h1 class="mt-3 font-condensada text-[clamp(4rem,20vw,8rem)] leading-[0.9] uppercase">La carta</h1>
+        <div class="mt-5"><AbiertoAhora /></div>
+      </div>
+      <Salchi class="mb-2 w-[22vw] max-w-[120px] min-w-[72px] shrink-0 text-blanco" />
+    </div>
+  </header>
+
+  <!-- Índice: se queda arriba al bajar -->
+  <nav aria-label="Secciones de la carta" class="sticky top-0 z-40 border-b-2 border-rojo bg-blanco">
+    <ul class="mx-auto flex max-w-3xl gap-2 overflow-x-auto px-4 py-3 sm:px-8 [scrollbar-width:none]">
+      {indice.map((s) => (
+        <li class="shrink-0">
+          <a href={`#${s.id}`} class="inline-flex min-h-10 items-center rounded-full border-2 border-rojo px-4 font-titular text-xs uppercase hover:bg-rojo hover:text-blanco">
+            {s.titulo}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <main id="contenido" class="mx-auto max-w-3xl px-4 pb-20 sm:px-8">
+    {CARTA_COMPLETA.map((s) => (
+      <section id={s.id} aria-labelledby={`${s.id}-titulo`} class="scroll-mt-20 pt-14">
+        <div class="flex flex-wrap items-baseline gap-x-4">
+          <h2 id={`${s.id}-titulo`} class="font-mano text-4xl uppercase sm:text-5xl">{s.titulo}</h2>
+          {s.nota && <p class="font-mono text-xs tracking-[0.2em] uppercase">({s.nota})</p>}
+        </div>
+
+        <ul class="mt-6 space-y-5">
+          {s.platos.map((p) => (
+            <li>
+              <div class="flex items-baseline gap-3">
+                <h3 class="font-titular text-base leading-tight uppercase sm:text-lg">{p.nombre}</h3>
+                <span class="relative top-[-0.25em] min-w-4 flex-1 border-b-2 border-dotted border-rojo" aria-hidden="true"></span>
+                <p class="shrink-0 font-bold">{p.precio}</p>
+              </div>
+              {p.desc && <p class="mt-1 max-w-[52ch] text-sm leading-snug">{p.desc}</p>}
+            </li>
+          ))}
+        </ul>
+
+        {FOTOS[s.id] && (
+          <div class:list={['mt-10 grid gap-4', FOTOS[s.id].length > 1 ? 'grid-cols-2' : 'grid-cols-1 sm:w-2/3']}>
+            {FOTOS[s.id].map((f, i) => (
+              <Image
+                src={f.src}
+                alt={f.alt}
+                widths={[240, 400, 640]}
+                sizes={FOTOS[s.id].length > 1 ? '(min-width: 768px) 360px, 45vw' : '(min-width: 768px) 480px, 92vw'}
+                class:list={[
+                  'w-full rounded-[1.5rem]',
+                  f.contener ? 'aspect-square bg-[#fbeee5] object-contain' : 'aspect-[4/5] object-cover',
+                  i % 2 ? 'rotate-[1.5deg]' : '-rotate-[1.5deg]',
+                ]}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+    ))}
+
+    <!-- Bebidas -->
+    <section id="beber" aria-labelledby="beber-titulo" class="scroll-mt-20 pt-14">
+      <h2 id="beber-titulo" class="font-mano text-4xl uppercase sm:text-5xl">Para beber</h2>
+
+      <ul class="mt-6 space-y-5">
+        {[BEBIDAS.cana, BEBIDAS.sangria].map((b) => (
+          <li class="flex items-baseline gap-3">
+            <h3 class="font-titular text-base uppercase sm:text-lg">{b.nombre}</h3>
+            <span class="relative top-[-0.25em] min-w-4 flex-1 border-b-2 border-dotted border-rojo" aria-hidden="true"></span>
+            <p class="shrink-0 font-bold">{b.precio}</p>
+          </li>
+        ))}
+      </ul>
+
+      <h3 class="mt-10 font-mono text-xs font-bold tracking-[0.2em] uppercase">Blancos · precio por botella</h3>
+      <ul class="mt-4 space-y-5">
+        {BEBIDAS.vinos.map((v) => (
+          <li>
+            <div class="flex items-baseline gap-3">
+              <h4 class="font-titular text-base uppercase sm:text-lg">{v.nombre}</h4>
+              <span class="relative top-[-0.25em] min-w-4 flex-1 border-b-2 border-dotted border-rojo" aria-hidden="true"></span>
+              <p class="shrink-0 font-bold">{v.precio}</p>
+            </div>
+            <p class="mt-1 max-w-[52ch] text-sm leading-snug">{v.desc}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-4 text-xs">{BEBIDAS.vinosPendientes}</p>
+
+      <Image
+        src={cartelCanitas}
+        alt="Ilustración de la marca: Salchi con una caña en la mano y el texto «Cañitas muy bien tiradas»."
+        widths={[240, 400, 640]}
+        sizes="(min-width: 768px) 480px, 92vw"
+        class="mt-10 aspect-square w-full rounded-[1.5rem] bg-[#fbeee5] object-contain -rotate-[1.5deg] sm:w-2/3"
+      />
+    </section>
+
+    <!-- Cierre: sin reservas -->
+    <section aria-labelledby="cierre-titulo" class="mt-20 rounded-[2rem] bg-rojo px-6 py-10 text-center text-blanco sm:px-10">
+      <h2 id="cierre-titulo" class="font-condensada text-[clamp(2.5rem,11vw,4.5rem)] leading-[0.9] uppercase">¿Hacéis reservas?</h2>
+      <p class="mt-3 font-titular text-lg uppercase sm:text-xl">No, solo tienes que venir.</p>
+      <p class="mt-2 text-sm">Según llegas te hacemos hueco.</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a href={NEGOCIO.comoLlegar} class="btn bg-blanco text-rojo" rel="noopener" target="_blank">
+          Cómo llegar <Icono nombre="flecha" /><span class="sr-only"> (Google Maps, se abre en otra pestaña)</span>
+        </a>
+        <a href={ruta()} class="btn border-2 border-blanco text-blanco">Volver al bar</a>
+      </div>
+    </section>
+
+    <p class="mt-8 text-center text-xs">Si tienes alguna alergia, pregúntanos: te contamos qué lleva cada plato.</p>
+  </main>
+
+  <Pie />
+</Base>

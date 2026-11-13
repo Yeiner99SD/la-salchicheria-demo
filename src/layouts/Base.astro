@@ -8,6 +8,7 @@ import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import ogFuente from '../assets/marca/ig-cocina-abierta.jpg';
 import { NEGOCIO } from '../data/negocio';
+import { ruta } from '../lib/ruta';
 
 interface Props {
   title?: string;
@@ -31,6 +32,7 @@ const jsonLd = {
   image: ogUrl.href,
   servesCuisine: ['Tapas', 'Pintxos', 'Perritos calientes'],
   acceptsReservations: false,
+  hasMenu: new URL(ruta('carta/'), Astro.site).href,
   priceRange: '€',
   sameAs: [NEGOCIO.instagram],
   address: {
@@ -56,6 +58,7 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
     <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.png`} />
     {/* La demo pública no debe indexarse como si fuera la web oficial del bar */}
     {import.meta.env.PUBLIC_DEMO === 'true' && <meta name="robots" content="noindex, nofollow" />}
@@ -84,6 +87,6 @@ const jsonLd = {
       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-blanco focus:px-4 focus:py-2 focus:font-titular focus:text-rojo"
       >Saltar al contenido</a
     >
-    <slot />
+    <div class="lienzo"><slot /></div>
   </body>
 </html>

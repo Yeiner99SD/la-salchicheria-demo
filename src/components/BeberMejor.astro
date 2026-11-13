@@ -1,7 +1,12 @@
 ---
 import TituloCapitulo from './TituloCapitulo.astro';
+import { Image } from 'astro:assets';
 import FotoProvisional from './FotoProvisional.astro';
 import { BEBIDAS } from '../data/negocio';
+import canaGrifo from '../assets/fotos/cana-grifo.jpg';
+import cartelVinitos from '../assets/fotos/cartel-vinitos.jpg';
+
+const fotoMedidas = { widths: [320, 480, 720], sizes: '(min-width: 768px) 30vw, calc(100vw - 6rem)', class: 'aspect-[4/5] w-full object-cover' };
 
 const burbujas = [
   [70, 250, 3], [95, 210, 2.5], [120, 260, 3.5], [85, 160, 2], [130, 190, 2.5], [105, 120, 3], [75, 100, 2],
@@ -53,7 +58,12 @@ const burbujas = [
     <article>
       <div data-revela class="overflow-hidden rounded-[1.5rem]">
         <div data-revela-img>
-          <FotoProvisional foto="caña tirándose del grifo, con flash" icono="cana" tono="cerveza" />
+          <Image
+            src={canaGrifo}
+            alt="Una caña tirándose del grifo con flash: el chorro cae en el vaso y la espuma sube blanca y cremosa."
+            {...fotoMedidas}
+            style="object-position: 50% 60%"
+          />
         </div>
       </div>
       <h3 class="mt-5 font-titular text-2xl uppercase">Cañas</h3>
@@ -63,7 +73,12 @@ const burbujas = [
     <article class="md:mt-24">
       <div data-revela class="overflow-hidden rounded-[1.5rem]">
         <div data-revela-img>
-          <FotoProvisional foto="copas de vino blanco en la barra" icono="copa" tono="blanco" />
+          <Image
+            src={cartelVinitos}
+            alt="Ilustración de la marca: Salchi con una copa de vino y una botella, y el texto «Vinitos de la tierra»."
+            {...fotoMedidas}
+            class="aspect-[4/5] w-full bg-[#fbeee5] object-contain"
+          />
         </div>
       </div>
       <h3 class="mt-5 font-titular text-2xl uppercase">Vinitos</h3>
@@ -77,7 +92,7 @@ const burbujas = [
           </li>
         ))}
       </ul>
-      <p class="mt-2 text-xs">Precio por botella. [Resto de la carta de vinos pendiente]</p>
+      <p class="mt-2 text-xs">Precio por botella. {BEBIDAS.vinosPendientes}</p>
     </article>
 
     <article class="md:mt-48">

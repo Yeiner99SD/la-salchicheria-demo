@@ -1,17 +1,26 @@
 ---
 import TituloCapitulo from './TituloCapitulo.astro';
+import { Image } from 'astro:assets';
 import FotoProvisional from './FotoProvisional.astro';
+import perritosPlato from '../assets/fotos/perritos-plato.jpg';
 import { RESENAS_PENDIENTES, MAPA_RESENAS } from '../data/negocio';
 
 // Orden de la mesa: reseña, foto, reseña, reseña, foto, reseña
 const giros = [-7, 5, -3, 8, -5, 4];
-type Posavaso = { tipo: 'resena'; texto: string } | { tipo: 'foto'; foto: string };
+type Posavaso = { tipo: 'resena'; texto: string } | { tipo: 'foto'; foto: string; real?: { src: ImageMetadata; alt: string } };
 const mesa: Posavaso[] = [
   { tipo: 'resena', texto: RESENAS_PENDIENTES[0] },
   { tipo: 'foto', foto: 'clientes brindando con cañas en la barra' },
   { tipo: 'resena', texto: RESENAS_PENDIENTES[1] },
   { tipo: 'resena', texto: RESENAS_PENDIENTES[2] },
-  { tipo: 'foto', foto: 'un cliente hincándole el diente a un perrito' },
+  {
+    tipo: 'foto',
+    foto: 'perritos',
+    real: {
+      src: perritosPlato,
+      alt: 'Dos perritos con queso, salsa y patatas paja en su caja de cartón, sobre un plato de peltre que alguien lleva a la mesa.',
+    },
+  },
   { tipo: 'resena', texto: RESENAS_PENDIENTES[3] },
 ];
 import Icono from './Icono.astro';
@@ -38,7 +47,11 @@ import Icono from './Icono.astro';
           </figure>
         ) : (
           <div class="posavaso-cuadrado overflow-hidden rounded-[1.25rem] border-[6px] border-blanco">
-            <FotoProvisional foto={p.foto} icono="brindis" tono="cerveza" ratio="1 / 1" />
+            {p.real ? (
+              <Image src={p.real.src} alt={p.real.alt} widths={[200, 400]} sizes="(min-width: 768px) 280px, 45vw" class="aspect-square w-full object-cover" />
+            ) : (
+              <FotoProvisional foto={p.foto} icono="brindis" tono="cerveza" ratio="1 / 1" />
+            )}
           </div>
         )}
       </li>

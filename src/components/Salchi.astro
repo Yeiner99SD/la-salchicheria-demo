@@ -1,0 +1,36 @@
+---
+/**
+ * Salchi a partir del SVG OFICIAL (marca/logo.svg, copiado en src/assets/marca/salchi.svg).
+ * No se redibuja nada: se incrusta el mismo trazado y, para la barra de progreso,
+ * se encuadra solo una parte con el viewBox (cabeza o cola). El color sale de `currentColor`.
+ */
+import fuente from '../assets/marca/salchi.svg?raw';
+
+interface Props {
+  parte?: 'entero' | 'cabeza' | 'cola';
+  titulo?: string; // si se pasa, la imagen es informativa (role="img"); si no, decorativa
+  class?: string;
+}
+
+const { parte = 'entero', titulo, class: clase } = Astro.props;
+
+// Encuadres en las coordenadas del SVG original (lienzo de 1080 × 1080)
+const ENCUADRES = {
+  entero: '356 286 368 504',
+  cabeza: '398 288 336 192', // cabeza, oreja, gafas y hocico
+  cola: '358 632 126 160', // cola y pata trasera
+} as const;
+
+const grupo = fuente.match(/<g[\s\S]*<\/g>/)![0].replace(/fill="#000000"/, 'fill="currentColor"');
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={ENCUADRES[parte]}
+  class={clase}
+  role={titulo ? 'img' : undefined}
+  aria-label={titulo}
+  aria-hidden={titulo ? undefined : 'true'}
+  focusable="false"
+  set:html={grupo}
+/>

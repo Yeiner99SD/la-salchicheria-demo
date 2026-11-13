@@ -59,12 +59,13 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 - Indicador **"¿Estamos abiertos ahora?"** calculado con el horario en zona horaria `Europe/Madrid`.
 - Antes de dar algo por terminado: ejecutar `npm run build` sin errores y revisar en móvil y escritorio.
 
-## Estado (12/11/2026)
-- **Web completa:** portada + capítulos 1–5 + pie. `npm run build` sin errores.
-- **Demo publicada:** https://yeiner99sd.github.io/la-salchicheria-demo/ (repo público Yeiner99SD/la-salchicheria-demo). Cada push a `main` despliega con GitHub Actions; la demo lleva `noindex` (`PUBLIC_DEMO=true`).
-- **Salchi provisional:** no hay SVG todavía. `src/components/SalchiRail.astro` usa una chapa con el logo oficial como cabeza y un punto como cola. Al llegar el SVG, sustituir solo `.salchi-cola` y `.salchi-cabeza`.
-- `src/assets/marca/salchi-blanco.png` / `salchi-rojo.png`: el logo oficial con fondo transparente (generados desde `marca/logo.jpg`, sin redibujar).
-- **Fotos provisionales:** `<FotoProvisional>` (fondo plano + ilustración de línea + etiqueta "[Foto: …]"). Lista en `src/data/fotos.md`. Sustituir por `<Picture>` cuando lleguen.
+## Estado (13/11/2026)
+- **Web completa:** portada + capítulos 1–5 + pie, y **/carta** (carta completa con precios, enlazada con el botón "Ver la carta completa" al terminar el capítulo 1). `npm run build` sin errores.
+- **Demo publicada:** https://yeiner99sd.github.io/la-salchicheria-demo/ (repo público Yeiner99SD/la-salchicheria-demo). Cada push a `main` despliega con GitHub Actions; la demo lleva `noindex` (`PUBLIC_DEMO=true`). Enlaces internos con `ruta()` de `src/lib/ruta.ts` (respeta el `base`).
+- **Salchi en SVG:** `marca/logo.svg` (copiado en `src/assets/marca/salchi.svg`) se incrusta con `Salchi.astro`: `parte="entero" | "cabeza" | "cola"` encuadra el MISMO trazado con el viewBox, sin redibujar. Color con `currentColor`. La barra (`SalchiRail.astro`) usa cabeza y cola. Favicon: `public/favicon.svg`.
+- Falta el **logotipo con texto** en vector ("la salchi chería"): solo existe en imagen (`fotos/igexport-DcqlX_qluNi.jpg` → `src/assets/fotos/cartel-logotipo.jpg`, sin usar todavía).
+- **Fotos reales** (de Instagram, optimizadas en `src/assets/fotos`): perritos, anillas, caña tirándose y carteles de marca (Cañitas, De picar, Vinitos). El resto siguen como `<FotoProvisional>`. Lista en `src/data/fotos.md`.
+- **Ancho en móvil:** todo el contenido va dentro de `.lienzo` (recorta el sobrante horizontal; `hidden` de respaldo y `clip` donde se entiende). Las animaciones de entrada no deben desplazar en horizontal. `.con-rail` va fuera de `@layer` para ganar a `px-*`.
 - **Reseñas:** marcadores `[Reseña real …]` en `src/data/negocio.ts`. No inventar opiniones.
 - **Animación:** `src/scripts/movimiento.ts`. Sin animaciones con `prefers-reduced-motion`. Iconos en SVG (`Icono.astro`): no usar glifos → ↓ ★ en el texto (fuerzan fuentes del sistema y encarecen la primera maquetación).
 - **Lighthouse móvil (local, Edge en Windows):** accesibilidad, buenas prácticas y SEO 100; rendimiento entre 75 y 94 según la pasada (mucho ruido local). Medir con PageSpeed Insights tras publicar.

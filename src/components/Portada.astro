@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import salchiBlanco from '../assets/marca/salchi-blanco.png';
+import Salchi from './Salchi.astro';
 import AbiertoAhora from './AbiertoAhora.astro';
 import { NEGOCIO } from '../data/negocio';
 
@@ -18,17 +17,9 @@ import Icono from './Icono.astro';
   </div>
 
   <div class="con-rail relative flex flex-1 flex-col items-center justify-center px-4 pt-6 pb-4 text-center sm:px-8">
-    <!-- Salchi encogido (logo oficial en blanco). PROVISIONAL hasta tener el SVG -->
-    <div data-portada-salchi class="respira mb-6 w-[38vw] max-w-[190px] min-w-[130px] sm:mb-8">
-      <Image
-        src={salchiBlanco}
-        alt="Salchi, el perro salchicha con gafas de sol de La Salchichería"
-        widths={[200, 350]}
-        sizes="(min-width: 640px) 190px, 38vw"
-        loading="eager"
-        fetchpriority="high"
-        class="h-auto w-full"
-      />
+    <!-- Salchi encogido (SVG oficial en blanco) -->
+    <div data-portada-salchi class="respira mb-6 w-[34vw] max-w-[170px] min-w-[118px] sm:mb-8">
+      <Salchi titulo="Salchi, el perro salchicha con gafas de sol de La Salchichería" class="h-auto w-full text-blanco" />
     </div>
 
     <h1 class="font-titular leading-[0.92] text-balance uppercase">

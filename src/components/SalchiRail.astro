@@ -2,23 +2,20 @@
 /**
  * Salchi como barra de progreso: la cola se queda arriba, la cabeza baja con el scroll
  * y entre ambas se estira el cuerpo (trazo en rojo de marca).
- *
- * ⚠️ PROVISIONAL hasta recibir el SVG oficial de Salchi.
- *    Cuando llegue: sustituir el contenido de .salchi-cola y .salchi-cabeza por los
- *    grupos <g> de cola y cabeza del SVG. El cuerpo y la lógica (--p) no cambian.
- *    Mientras tanto, la cabeza es una chapa con el logo oficial (sin redibujar).
+ * Cabeza y cola son encuadres del SVG oficial (ver Salchi.astro): no se redibuja nada.
  */
-import { Image } from 'astro:assets';
-import salchi from '../assets/marca/salchi-rojo.png';
+import Salchi from './Salchi.astro';
 ---
 
 <div class="salchi-rail" data-salchi aria-hidden="true">
   <div class="salchi-cola">
-    <span class="block size-2.5 rounded-full bg-rojo"></span>
+    <Salchi parte="cola" class="h-[70%] w-auto text-rojo" />
   </div>
   <div class="salchi-cuerpo"></div>
   <div class="salchi-cabeza">
-    <Image data-salchi-img src={salchi} alt="" width={64} densities={[1, 2]} class="h-[78%] w-auto" loading="eager" />
+    <span data-salchi-img class="grid size-full place-items-center">
+      <Salchi parte="cabeza" class="w-[80%] translate-x-[4%] text-rojo" />
+    </span>
     <span data-salchi-guau class="salchi-guau">¡Guau!</span>
   </div>
 </div>
@@ -27,7 +24,7 @@ import salchi from '../assets/marca/salchi-rojo.png';
   .salchi-rail {
     --p: 0; /* progreso 0 → 1, lo pone el JS */
     --recorrido: 0px; /* alto disponible para la cabeza, lo pone el JS */
-    --cabeza: 44px;
+    --cabeza: 48px;
     position: fixed;
     z-index: 50;
     top: 4.25rem;
@@ -40,7 +37,7 @@ import salchi from '../assets/marca/salchi-rojo.png';
   }
   @media (min-width: 768px) {
     .salchi-rail {
-      --cabeza: 56px;
+      --cabeza: 60px;
       right: 1.25rem;
     }
   }
@@ -52,8 +49,8 @@ import salchi from '../assets/marca/salchi-rojo.png';
     translate: -50% -50%;
     display: grid;
     place-items: center;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     border-radius: 999px;
     background: var(--color-blanco);
     border: 2.5px solid var(--color-rojo);

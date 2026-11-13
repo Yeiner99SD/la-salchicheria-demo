@@ -2,8 +2,21 @@
 import { Image, Picture } from 'astro:assets';
 import carta from '../assets/fotos/carta.jpg';
 import cocinero from '../assets/fotos/cocinero-camiseta.jpg';
+import perritoSalchi from '../assets/fotos/perrito-estilo-salchi.jpg';
+import anillas from '../assets/fotos/anillas-camiseta.jpg';
 import { CARTA } from '../data/negocio';
+import { ruta } from '../lib/ruta';
 import TituloCapitulo from './TituloCapitulo.astro';
+import Icono from './Icono.astro';
+
+// Platos con foto real (el resto, plato de peltre con marcador hasta que lleguen)
+const FOTOS: Record<string, { src: ImageMetadata; alt: string; posicion?: string }> = {
+  'Anillas a la andaluza': {
+    src: anillas,
+    alt: 'Plato de peltre con anillas a la andaluza bien doradas y alioli, sujeto por alguien con la camiseta de La Salchichería.',
+    posicion: '50% 62%',
+  },
+};
 
 const textosZoom = [
   'La carta, en una hoja. Sin rodeos.',
@@ -27,7 +40,7 @@ const textosZoom = [
     <div
       data-zoom-img
       class="relative"
-      style="aspect-ratio: 3273 / 4096; height: min(82svh, calc(88vw * 1.2514));"
+      style="aspect-ratio: 3273 / 4096; height: min(82vh, calc(88vw * 1.2514)); height: min(82svh, calc(88vw * 1.2514));"
     >
       <Picture
         src={carta}
@@ -60,6 +73,21 @@ const textosZoom = [
       <ul data-track class="flex w-max items-start gap-5 px-4 sm:gap-8 sm:px-8">
         <li data-plato class="w-[70vw] max-w-[300px] shrink-0">
           <Image
+            src={perritoSalchi}
+            alt="Perrito estilo Salchi en su caja de cartón, con salsa, queso rallado y cebolla encurtida rosa, sobre fondo rojo con el rótulo «Estilo Salchi · Perrito»."
+            widths={[300, 480, 600]}
+            sizes="(min-width: 640px) 300px, 70vw"
+            class="aspect-[4/5] w-full rounded-[2rem] object-cover"
+          />
+          <div class="mt-4 flex items-baseline justify-between gap-3 border-b-2 border-dashed border-rojo pb-2">
+            <p class="font-titular text-base uppercase">Perrito estilo Salchi</p>
+            <p class="shrink-0 font-bold">[PRECIO]</p>
+          </div>
+          <p class="mt-2 text-sm leading-snug">La razón del nombre. Empieza por aquí.</p>
+        </li>
+
+        <li data-plato class="w-[70vw] max-w-[300px] shrink-0">
+          <Image
             src={cocinero}
             alt="Un cocinero de espaldas en la cocina, con la camiseta blanca de Salchi en rojo y delantal negro."
             widths={[300, 480]}
@@ -72,13 +100,24 @@ const textosZoom = [
 
         {CARTA.map((p) => (
           <li data-plato class="w-[70vw] max-w-[300px] shrink-0">
-            <div class="plato grid aspect-square place-items-center rounded-full border-[12px] border-peltre bg-blanco p-8 text-center">
-              <div>
-                <p class="font-mono text-[11px] tracking-[0.2em] text-peltre uppercase">{p.seccion}</p>
-                <p class="mt-1 font-titular text-xl leading-tight uppercase sm:text-2xl">{p.nombre}</p>
-                <p class="mt-3 font-mono text-[10px] tracking-widest text-peltre uppercase">[Foto pendiente]</p>
+            {FOTOS[p.nombre] ? (
+              <Image
+                src={FOTOS[p.nombre].src}
+                alt={FOTOS[p.nombre].alt}
+                widths={[300, 480, 600]}
+                sizes="(min-width: 640px) 300px, 70vw"
+                class="aspect-square w-full rounded-full border-[6px] border-peltre object-cover"
+                style={`object-position: ${FOTOS[p.nombre].posicion ?? '50% 50%'}`}
+              />
+            ) : (
+              <div class="plato grid aspect-square place-items-center rounded-full border-[12px] border-peltre bg-blanco p-8 text-center">
+                <div>
+                  <p class="font-mono text-[11px] tracking-[0.2em] text-peltre uppercase">{p.seccion}</p>
+                  <p class="mt-1 font-titular text-xl leading-tight uppercase sm:text-2xl">{p.nombre}</p>
+                  <p class="mt-3 font-mono text-[10px] tracking-widest text-peltre uppercase">[Foto pendiente]</p>
+                </div>
               </div>
-            </div>
+            )}
             <div class="mt-4 flex items-baseline justify-between gap-3 border-b-2 border-dashed border-rojo pb-2">
               <p class="font-titular text-base uppercase">{p.nombre}</p>
               <p class="shrink-0 font-bold">{p.precio}</p>
@@ -90,18 +129,23 @@ const textosZoom = [
         <li data-plato class="w-[70vw] max-w-[300px] shrink-0">
           <div class="grid aspect-square place-items-center rounded-full bg-rojo p-8 text-center text-blanco">
             <div>
-              <p class="font-mano text-2xl">Y perritos,</p>
-              <p class="font-titular text-3xl uppercase">claro</p>
+              <p class="font-mano text-2xl">Y esto es</p>
+              <p class="font-titular text-3xl leading-none uppercase">solo el principio</p>
+              <p class="mt-3 font-mono text-xs tracking-widest uppercase">Fish &amp; chips, huerta, jeta…</p>
             </div>
           </div>
-          <div class="mt-4 flex items-baseline justify-between gap-3 border-b-2 border-dashed border-rojo pb-2">
-            <p class="font-titular text-base uppercase">Perritos</p>
-            <p class="shrink-0 font-bold">[PRECIO]</p>
-          </div>
-          <p class="mt-2 text-sm leading-snug">La razón del nombre. [Foto y carta de perritos pendientes]</p>
         </li>
       </ul>
     </div>
+  </div>
+
+  <!-- 4 · Al terminar el scroll de la carta: a la carta completa -->
+  <div data-carta-cta class="con-rail px-4 pt-4 pb-24 text-center sm:px-8">
+    <p class="font-mano text-xl -rotate-2 sm:text-2xl">¿Te has quedado con hambre?</p>
+    <a href={ruta('carta/')} class="btn mt-5 bg-rojo whitespace-nowrap text-blanco shadow-[5px_5px_0_var(--color-peltre)] sm:px-8 sm:text-lg">
+      Ver la carta completa <Icono nombre="flecha" />
+    </a>
+    <p class="mt-4 text-xs">Pintxos, clásicos, huerta, perritos y vinos. Con precios.</p>
   </div>
 </section>
 

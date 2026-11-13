@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import salchiRojo from '../assets/marca/salchi-rojo.png';
+import Salchi from './Salchi.astro';
 import cocinaAbierta from '../assets/marca/ig-cocina-abierta.jpg';
 import AbiertoAhora from './AbiertoAhora.astro';
 import { NEGOCIO } from '../data/negocio';
@@ -81,7 +81,7 @@ import Icono from './Icono.astro';
           />
         </div>
         <div data-final-salchi class="grid aspect-square w-[56%] max-w-[220px] origin-bottom place-items-center rounded-full bg-blanco">
-          <Image src={salchiRojo} alt="Salchi, la mascota, celebrando que has llegado al final" widths={[160, 320]} sizes="150px" class="h-[72%] w-auto" />
+          <Salchi titulo="Salchi, la mascota, celebrando que has llegado al final" class="h-[72%] w-auto text-rojo" />
         </div>
         </div>
         <p class="mt-6 font-mano text-2xl -rotate-2 sm:text-3xl">La vida según Salchi:</p>
