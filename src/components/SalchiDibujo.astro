@@ -1,0 +1,33 @@
+---
+/**
+ * Dibujo oficial de Salchi (marca/logo.svg → src/assets/marca/salchi.svg) definido UNA vez
+ * por página, para que <SalchiLargo> lo reutilice con <use href="#salchi-dibujo"> sin repetir el trazado.
+ *
+ * No se redibuja nada: son el trazado oficial (tinta) y su propio contorno exterior
+ * (el primer subtrazo del mismo trazado), que sirve de silueta para rellenar el interior
+ * y dar un filo alrededor, de modo que Salchi se lea igual sobre rojo que sobre blanco.
+ *
+ * Colores con variables heredadas por quien lo usa:
+ *   --salchi-tinta   color de la línea (por defecto, currentColor)
+ *   --salchi-relleno color del interior y del filo (por defecto, ninguno)
+ */
+import fuente from '../assets/marca/salchi.svg?raw';
+
+const d = fuente.match(/<path d="([\s\S]*?)"/)![1].replace(/\s+/g, ' ');
+const contorno = d.slice(0, d.indexOf('z') + 1);
+const transform = fuente.match(/<g transform="([^"]+)"/)![1];
+---
+
+<svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="salchi-dibujo" transform={transform}>
+      <path
+        d={contorno}
+        fill="var(--salchi-relleno, none)"
+        stroke="var(--salchi-relleno, none)"
+        stroke-width="140"
+        stroke-linejoin="round"></path>
+      <path d={d} fill="var(--salchi-tinta, currentColor)"></path>
+    </g>
+  </defs>
+</svg>

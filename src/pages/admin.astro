@@ -1,0 +1,309 @@
+---
+/**
+ * PANEL DE PRUEBA (demo): el bar elige qué productos salen en «Como Dios manda».
+ *
+ * ⚠️ Sin autenticación y sin servidor: la lista se guarda en ESTE navegador (localStorage) y la portada
+ *    la lee de ahí. Sirve para enseñar cómo funcionaría; no es un panel real.
+ *    Para producción hacen falta: acceso con contraseña, guardar en un servidor y subida de fotos.
+ *    No está enlazado desde ninguna página y lleva noindex.
+ */
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import Salchi from '../components/Salchi.astro';
+import { CARTA_COMPLETA } from '../data/negocio';
+import { ETIQUETAS, MAX_DESTACADOS } from '../data/destacados';
+import { bibliotecaFotos } from '../data/fotos-destacados';
+import { ruta } from '../lib/ruta';
+
+const fotos = await bibliotecaFotos();
+// Platos de la carta para añadir con un toque (sin los marcadores pendientes)
+const carta = CARTA_COMPLETA.flatMap((s) => s.platos)
+  .filter((p) => !p.nombre.startsWith('['))
+  .map((p) => ({ nombre: p.nombre, desc: p.desc?.startsWith('[') ? '' : (p.desc ?? ''), precio: p.precio, seccion: p.seccion }));
+---
+
+<Base noindex title="Panel de prueba | La Salchichería · Oeste 7" description="Panel de prueba para elegir los destacados de la portada.">
+  <p class="bg-peltre px-4 py-2.5 text-center font-titular text-xs tracking-wide text-blanco uppercase sm:text-sm">
+    Panel de prueba · sin contraseña · los cambios se guardan solo en este navegador
+  </p>
+
+  <header class="bg-rojo text-blanco">
+    <div class="mx-auto max-w-3xl px-4 pt-4 text-[11px] tracking-[0.18em] uppercase sm:px-8 sm:text-xs">
+      <a href={ruta()} class="inline-flex min-h-11 items-center gap-2 font-bold underline-offset-4 hover:underline">
+        <Icono nombre="flecha" class="inline-block size-[1.1em] rotate-180" /> Volver al bar
+      </a>
+    </div>
+    <div class="mx-auto flex max-w-3xl items-end gap-5 px-4 pt-6 pb-10 sm:px-8">
+      <div class="min-w-0 flex-1">
+        <p class="font-mano text-xl -rotate-2 sm:text-2xl">Aquí mandas tú</p>
+        <h1 class="mt-3 font-condensada text-[clamp(3.25rem,15vw,7rem)] leading-[0.9] uppercase">Panel de la casa</h1>
+      </div>
+      <Salchi class="mb-2 w-[20vw] max-w-[110px] min-w-[64px] shrink-0 text-blanco" />
+    </div>
+  </header>
+
+  <main id="contenido" class="mx-auto max-w-3xl px-4 pt-10 pb-24 sm:px-8">
+    <h2 class="font-titular text-[clamp(1.6rem,7vw,2.75rem)] leading-none uppercase">Destacados de «Como Dios manda»</h2>
+    <p class="mt-3 max-w-prose text-sm leading-relaxed sm:text-base">
+      Elige qué productos salen en la portada, en qué orden y con qué etiqueta (Top, Promo o Nuevo).
+      Cada cambio se guarda solo. Máximo {MAX_DESTACADOS}.
+    </p>
+
+    <!-- Añadir -->
+    <div class="mt-8 rounded-[1.5rem] bg-roto p-4 sm:p-5">
+      <p class="font-mano text-lg -rotate-1">Añadir un producto</p>
+      <div class="mt-3 flex flex-wrap items-end gap-3">
+        <label class="campo min-w-0 flex-1 basis-56">
+          <span>De la carta</span>
+          <select data-nuevo-carta>
+            <option value="">Elige un plato…</option>
+            {carta.map((p, i) => <option value={i}>{p.seccion} · {p.nombre}</option>)}
+          </select>
+        </label>
+        <button type="button" data-accion="anadir-carta" class="btn bg-rojo text-blanco">Añadir</button>
+        <button type="button" data-accion="anadir-vacio" class="btn border-2 border-rojo text-rojo">Añadir en blanco</button>
+      </div>
+    </div>
+
+    <p data-estado role="status" aria-live="polite" class="mt-6 min-h-6 text-sm font-bold"></p>
+
+    <ol data-lista class="mt-2 space-y-5"></ol>
+
+    <div class="mt-10 flex flex-wrap gap-3 border-t-2 border-dashed border-rojo pt-6">
+      <a href={ruta('#comer')} class="btn bg-rojo text-blanco">Ver cómo queda en la web <Icono nombre="flecha" /></a>
+      <button type="button" data-accion="restaurar" class="btn border-2 border-rojo text-rojo">Restaurar la lista de partida</button>
+    </div>
+
+    <p class="mt-8 max-w-prose text-xs leading-relaxed">
+      Esto es una demostración: los cambios solo se ven en el navegador donde se hacen. En la versión definitiva,
+      el panel tendrá contraseña, los cambios se verán para todo el mundo y se podrán subir fotos nuevas.
+    </p>
+  </main>
+
+  <!-- Plantilla de cada destacado -->
+  <template data-plantilla-fila>
+    <li data-fila class="rounded-[1.5rem] border-2 border-rojo p-4 sm:p-5">
+      <div class="flex gap-4">
+        <div class="w-20 shrink-0 sm:w-24">
+          <img data-mini alt="" class="aspect-[4/5] w-full rounded-xl object-cover" />
+          <div data-mini-vacia class="grid aspect-[4/5] place-items-center rounded-xl border-2 border-dashed border-rojo px-1 text-center text-[10px] tracking-wider uppercase">Sin foto</div>
+          <p data-posicion class="mt-2 text-center font-titular text-xs uppercase"></p>
+        </div>
+        <div class="grid min-w-0 flex-1 gap-3 sm:grid-cols-2">
+          <label class="campo sm:col-span-2"><span>Nombre</span><input data-c="nombre" type="text" maxlength="80" autocomplete="off" /></label>
+          <label class="campo"><span>Precio</span><input data-c="precio" type="text" maxlength="24" autocomplete="off" placeholder="7,20 €" /></label>
+          <label class="campo">
+            <span>Etiqueta</span>
+            <select data-c="etiqueta">
+              {ETIQUETAS.map((e) => <option value={e}>{e || 'Sin etiqueta'}</option>)}
+            </select>
+          </label>
+          <label class="campo sm:col-span-2"><span>Descripción</span><textarea data-c="desc" rows="2" maxlength="200"></textarea></label>
+          <label class="campo sm:col-span-2">
+            <span>Foto</span>
+            <select data-c="foto">
+              <option value="">Sin foto</option>
+              {Object.entries(fotos).map(([clave, f]) => <option value={clave}>{f.nombre}</option>)}
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="mt-4 flex flex-wrap items-center gap-2 border-t-2 border-dashed border-rojo pt-3">
+        <label class="mr-auto inline-flex min-h-11 items-center gap-2 text-sm font-bold">
+          <input data-c="visible" type="checkbox" class="size-5 accent-[var(--color-rojo)]" /> Visible en la web
+        </label>
+        <button type="button" data-accion="subir" class="boton-fila">Subir</button>
+        <button type="button" data-accion="bajar" class="boton-fila">Bajar</button>
+        <button type="button" data-accion="quitar" class="boton-fila">Quitar</button>
+      </div>
+    </li>
+  </template>
+
+  <script type="application/json" data-fotos set:html={JSON.stringify(fotos)} />
+  <script type="application/json" data-carta set:html={JSON.stringify(carta)} />
+</Base>
+
+<style>
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .campo :is(input, select, textarea) {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.55rem 0.7rem;
+    border: 2px solid var(--color-rojo);
+    border-radius: 0.75rem;
+    background: var(--color-blanco);
+    color: var(--color-rojo);
+    font: inherit;
+    font-size: 1rem; /* 16 px: evita el zoom automático de iOS al enfocar */
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+  .campo textarea {
+    resize: vertical;
+  }
+  .boton-fila {
+    min-height: 44px;
+    padding: 0 0.9rem;
+    border: 2px solid var(--color-rojo);
+    border-radius: 999px;
+    font-family: var(--font-titular);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--color-rojo);
+  }
+  .boton-fila:hover:not(:disabled) {
+    background: var(--color-rojo);
+    color: var(--color-blanco);
+  }
+  .boton-fila:disabled {
+    opacity: 0.35;
+  }
+</style>
+
+<script>
+  import {
+    DESTACADOS_INICIALES,
+    CLAVE_ALMACEN,
+    MAX_DESTACADOS,
+    leerDestacados,
+    type Destacado,
+  } from '../data/destacados';
+
+  type Foto = { nombre: string; miniatura: string };
+  type PlatoCarta = { nombre: string; desc: string; precio: string };
+
+  const q = <T extends Element = HTMLElement>(s: string, raiz: ParentNode = document) => raiz.querySelector<T>(s)!;
+  const fotos: Record<string, Foto> = JSON.parse(q('[data-fotos]').textContent || '{}');
+  const carta: PlatoCarta[] = JSON.parse(q('[data-carta]').textContent || '[]');
+  const ol = q<HTMLOListElement>('[data-lista]');
+  const plantilla = q<HTMLTemplateElement>('[data-plantilla-fila]');
+  const estado = q('[data-estado]');
+
+  const copia = (l: Destacado[]) => l.map((d) => ({ ...d }));
+  let lista: Destacado[] = leerDestacados(Object.keys(fotos)) ?? copia(DESTACADOS_INICIALES);
+
+  function guardar(mensaje = 'Guardado en este navegador.') {
+    try {
+      localStorage.setItem(CLAVE_ALMACEN, JSON.stringify(lista));
+      estado.textContent = mensaje;
+    } catch {
+      estado.textContent = 'No se ha podido guardar: este navegador no permite almacenar datos.';
+    }
+  }
+
+  function miniatura(fila: Element, clave: string) {
+    const img = q<HTMLImageElement>('[data-mini]', fila);
+    const vacia = q('[data-mini-vacia]', fila);
+    const foto = fotos[clave];
+    if (foto) img.src = foto.miniatura;
+    img.hidden = !foto;
+    vacia.hidden = Boolean(foto);
+  }
+
+  function pintar() {
+    ol.replaceChildren(
+      ...lista.map((d, i) => {
+        const fila = (plantilla.content.cloneNode(true) as DocumentFragment).firstElementChild as HTMLElement;
+        fila.dataset.indice = String(i);
+        q('[data-posicion]', fila).textContent = `N.º ${i + 1}`;
+        q<HTMLInputElement>('[data-c="nombre"]', fila).value = d.nombre;
+        q<HTMLInputElement>('[data-c="precio"]', fila).value = d.precio;
+        q<HTMLSelectElement>('[data-c="etiqueta"]', fila).value = d.etiqueta;
+        q<HTMLTextAreaElement>('[data-c="desc"]', fila).value = d.desc;
+        q<HTMLSelectElement>('[data-c="foto"]', fila).value = d.foto;
+        q<HTMLInputElement>('[data-c="visible"]', fila).checked = d.visible;
+        q<HTMLButtonElement>('[data-accion="subir"]', fila).disabled = i === 0;
+        q<HTMLButtonElement>('[data-accion="bajar"]', fila).disabled = i === lista.length - 1;
+        miniatura(fila, d.foto);
+        return fila;
+      }),
+    );
+    document.querySelectorAll<HTMLButtonElement>('[data-accion^="anadir"]').forEach((b) => (b.disabled = lista.length >= MAX_DESTACADOS));
+  }
+
+  // Cambios en los campos: se guardan al momento
+  ol.addEventListener('input', (e) => {
+    const campo = e.target as HTMLInputElement;
+    const fila = campo.closest<HTMLElement>('[data-fila]');
+    const clave = campo.dataset.c as keyof Destacado | undefined;
+    if (!fila || !clave) return;
+    const d = lista[Number(fila.dataset.indice)] as Record<string, unknown>;
+    d[clave] = campo.type === 'checkbox' ? campo.checked : campo.value;
+    if (clave === 'foto') miniatura(fila, campo.value);
+    guardar();
+  });
+
+  // Subir, bajar y quitar
+  ol.addEventListener('click', (e) => {
+    const boton = (e.target as Element).closest<HTMLButtonElement>('[data-accion]');
+    const fila = boton?.closest<HTMLElement>('[data-fila]');
+    if (!boton || !fila) return;
+    const i = Number(fila.dataset.indice);
+    const accion = boton.dataset.accion!;
+    let foco = i;
+    if (accion === 'subir' && i > 0) {
+      [lista[i - 1], lista[i]] = [lista[i], lista[i - 1]];
+      foco = i - 1;
+    } else if (accion === 'bajar' && i < lista.length - 1) {
+      [lista[i + 1], lista[i]] = [lista[i], lista[i + 1]];
+      foco = i + 1;
+    } else if (accion === 'quitar') {
+      const nombre = lista[i].nombre || 'el producto';
+      lista.splice(i, 1);
+      pintar();
+      guardar(`Quitado: ${nombre}.`);
+      return;
+    } else return;
+    pintar();
+    guardar('Orden cambiado y guardado.');
+    // el foco sigue al producto que se ha movido
+    const destino = ol.children[foco]?.querySelector<HTMLButtonElement>(`[data-accion="${accion}"]`);
+    (destino && !destino.disabled ? destino : ol.children[foco]?.querySelector<HTMLElement>('[data-c="nombre"]'))?.focus();
+  });
+
+  function anadir(base: Partial<Destacado>) {
+    if (lista.length >= MAX_DESTACADOS) return;
+    lista.push({ id: `d-${Date.now().toString(36)}`, nombre: '', desc: '', precio: '', etiqueta: '', foto: '', visible: true, ...base });
+    pintar();
+    guardar('Producto añadido al final de la lista.');
+    const nueva = ol.lastElementChild as HTMLElement;
+    nueva.scrollIntoView({ block: 'center' });
+    q<HTMLInputElement>('[data-c="nombre"]', nueva).focus();
+  }
+
+  q('[data-accion="anadir-carta"]').addEventListener('click', () => {
+    const sel = q<HTMLSelectElement>('[data-nuevo-carta]');
+    const plato = carta[Number(sel.value)];
+    if (sel.value === '' || !plato) {
+      estado.textContent = 'Elige primero un plato de la carta.';
+      sel.focus();
+      return;
+    }
+    anadir({ nombre: plato.nombre, desc: plato.desc, precio: plato.precio });
+    sel.value = '';
+  });
+  q('[data-accion="anadir-vacio"]').addEventListener('click', () => anadir({ nombre: 'Nuevo producto' }));
+
+  q('[data-accion="restaurar"]').addEventListener('click', () => {
+    if (!confirm('¿Volver a la lista de partida? Se perderán los cambios hechos en este navegador.')) return;
+    try {
+      localStorage.removeItem(CLAVE_ALMACEN);
+    } catch {
+      /* sin almacenamiento: no hay nada que borrar */
+    }
+    lista = copia(DESTACADOS_INICIALES);
+    pintar();
+    estado.textContent = 'Lista de partida restaurada.';
+  });
+
+  pintar();
+</script>

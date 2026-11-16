@@ -1,0 +1,106 @@
+---
+/**
+ * Salchi que se estira de verdad: la cabeza y las patas conservan su forma y solo crece el cuerpo.
+ *
+ * Cómo: el dibujo oficial se muestra tres veces, recortado por una línea horizontal (y = CORTE)
+ * que cruza solo los dos trazos del cuerpo (lomo y barriga), por encima de la cola:
+ *   · arriba  → de la cabeza al corte
+ *   · medio   → una rebanada de 1 unidad justo en el corte, estirada en vertical: es el cuerpo que crece
+ *   · abajo   → del corte a las patas y la cola
+ * El trazado no se toca: solo se encuadra con viewBox (ver SalchiDibujo.astro, que debe estar en la página).
+ *
+ * PROVISIONAL (demo): cuando el estudio entregue Salchi en piezas (cabeza, cuerpo repetible y patas),
+ * sustituir los tres <svg> por esas piezas. La mecánica (--estira, --largo) no cambia.
+ *
+ * Se controla con dos variables CSS en el elemento raíz:
+ *   --estira  0 → 1   cuánto se ha estirado
+ *   --largo   px/vh   cuánto mide el cuerpo estirado del todo
+ * Dirección: por defecto la cabeza se queda y las patas bajan; con `sube`, las patas se quedan y la cabeza sube.
+ */
+interface Props {
+  class?: string;
+  sube?: boolean;
+  titulo?: string; // si se pasa, la imagen es informativa; si no, decorativa
+  [dato: `data-${string}`]: string | undefined;
+}
+const { class: clase, sube = false, titulo, ...resto } = Astro.props;
+
+// Encuadre en las coordenadas del SVG original (lienzo de 1080). Con margen para el filo.
+const X = 336;
+const ANCHO = 408;
+const ARRIBA = 270;
+const CORTE = 606;
+const ABAJO = 802;
+---
+
+<div
+  class:list={['salchi-largo', sube && 'sube', clase]}
+  data-salchi-largo
+  role={titulo ? 'img' : undefined}
+  aria-label={titulo}
+  aria-hidden={titulo ? undefined : 'true'}
+  {...resto}
+>
+  <svg class="sl-arriba" viewBox={`${X} ${ARRIBA} ${ANCHO} ${CORTE - ARRIBA + 0.5}`} focusable="false" aria-hidden="true">
+    <use href="#salchi-dibujo"></use>
+  </svg>
+  <div class="sl-corte">
+    <svg class="sl-medio" viewBox={`${X} ${CORTE - 0.5} ${ANCHO} 1`} preserveAspectRatio="none" focusable="false" aria-hidden="true">
+      <use href="#salchi-dibujo"></use>
+    </svg>
+  </div>
+  <svg class="sl-abajo" viewBox={`${X} ${CORTE} ${ANCHO} ${ABAJO - CORTE}`} focusable="false" aria-hidden="true">
+    <use href="#salchi-dibujo"></use>
+  </svg>
+</div>
+
+<style>
+  /* --estira y --largo NO se declaran aquí (se leen con valor por defecto), para que
+     quien use el componente pueda fijarlas con una clase o desde JS sin pelear con la especificidad. */
+  .salchi-largo {
+    display: block;
+    position: relative;
+  }
+  .sl-arriba,
+  .sl-abajo {
+    display: block;
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  /* medio píxel de solape para que no se vea la junta */
+  .sl-abajo {
+    margin-top: -0.5px;
+  }
+  /* Línea de corte: no ocupa sitio; de ella cuelga (o sobre ella se levanta) el cuerpo que crece */
+  .sl-corte {
+    position: relative;
+    height: 0;
+  }
+  .sl-medio {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: calc(var(--largo, 0px) + 2px);
+    transform: scaleY(var(--estira, 0));
+  }
+
+  /* Por defecto: la cabeza se queda, el cuerpo crece hacia abajo y las patas bajan */
+  .salchi-largo:not(.sube) .sl-medio {
+    top: -1px;
+    transform-origin: 50% 0;
+  }
+  .salchi-largo:not(.sube) .sl-abajo {
+    transform: translateY(calc(var(--estira, 0) * var(--largo, 0px))) rotate(var(--giro, 0deg));
+    transform-origin: 50% 0;
+  }
+
+  /* Con .sube: las patas se quedan, el cuerpo crece hacia arriba y la cabeza sube */
+  .salchi-largo.sube .sl-medio {
+    bottom: -1px;
+    transform-origin: 50% 100%;
+  }
+  .salchi-largo.sube .sl-arriba {
+    transform: translateY(calc(var(--estira, 0) * var(--largo, 0px) * -1));
+  }
+</style>

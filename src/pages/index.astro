@@ -24,5 +24,7 @@ import Pie from '../components/Pie.astro';
 </Base>
 
 <script>
+  // El orden importa: primero se colocan los destacados guardados y luego se montan las animaciones
+  import '../scripts/destacados';
   import '../scripts/movimiento';
 </script>

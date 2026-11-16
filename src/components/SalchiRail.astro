@@ -1,98 +1,55 @@
 ---
 /**
- * Salchi como barra de progreso: la cola se queda arriba, la cabeza baja con el scroll
- * y entre ambas se estira el cuerpo (trazo en rojo de marca).
- * Cabeza y cola son encuadres del SVG oficial (ver Salchi.astro): no se redibuja nada.
+ * Salchi como barra de progreso: la cabeza se queda arriba y, con el scroll, el cuerpo crece
+ * y las patas bajan hasta el final de la página. Es un solo perro que se estira
+ * (ver SalchiLargo.astro), no una línea con dos chapas.
+ *
+ * Incluye <SalchiDibujo /> (el trazado oficial, una vez por página): lo usan esta barra y la portada.
  */
-import Salchi from './Salchi.astro';
+import SalchiDibujo from './SalchiDibujo.astro';
+import SalchiLargo from './SalchiLargo.astro';
 ---
 
+<SalchiDibujo />
+
 <div class="salchi-rail" data-salchi aria-hidden="true">
-  <div class="salchi-cola">
-    <Salchi parte="cola" class="h-[70%] w-auto text-rojo" />
-  </div>
-  <div class="salchi-cuerpo"></div>
-  <div class="salchi-cabeza">
-    <span data-salchi-img class="grid size-full place-items-center">
-      <Salchi parte="cabeza" class="w-[80%] translate-x-[4%] text-rojo" />
-    </span>
-    <span data-salchi-guau class="salchi-guau">¡Guau!</span>
-  </div>
+  <SalchiLargo class="salchi-perro" data-salchi-perro="" />
+  <span data-salchi-guau class="salchi-guau">¡Guau!</span>
 </div>
 
 <style>
   .salchi-rail {
-    --p: 0; /* progreso 0 → 1, lo pone el JS */
-    --recorrido: 0px; /* alto disponible para la cabeza, lo pone el JS */
-    --cabeza: 48px;
+    --ancho: 56px;
     position: fixed;
     z-index: 50;
     top: 4.25rem;
     bottom: 0.75rem;
-    right: 0.5rem;
-    width: var(--cabeza);
+    right: 2px;
+    width: var(--ancho);
     pointer-events: none;
     opacity: var(--visible, 1);
     transition: opacity 0.4s ease;
+    /* línea roja con interior y filo blancos: se lee igual sobre rojo que sobre blanco */
+    --salchi-tinta: var(--color-rojo);
+    --salchi-relleno: var(--color-blanco);
   }
   @media (min-width: 768px) {
     .salchi-rail {
-      --cabeza: 60px;
-      right: 1.25rem;
+      --ancho: 74px;
+      right: 4px;
     }
   }
 
-  .salchi-cola {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    translate: -50% -50%;
-    display: grid;
-    place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 999px;
-    background: var(--color-blanco);
-    border: 2.5px solid var(--color-rojo);
-  }
-
-  .salchi-cuerpo {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 8px;
-    height: calc(var(--recorrido) + var(--cabeza) / 2);
-    translate: -50% 0;
-    transform: scaleY(var(--p));
-    transform-origin: 50% 0;
-    background: var(--color-rojo);
-    border-radius: 999px;
-    /* borde blanco: se ve igual sobre rojo que sobre blanco */
-    box-shadow: 0 0 0 2px var(--color-blanco);
-  }
-
-  .salchi-cabeza {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--cabeza);
-    height: var(--cabeza);
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
-    background: var(--color-blanco);
-    border: 2.5px solid var(--color-rojo);
-    box-shadow: 0 0 0 2px var(--color-blanco);
-    transform: translateY(calc(var(--p) * var(--recorrido))) rotate(var(--giro, 0deg));
+  .salchi-perro {
+    width: 100%;
     will-change: transform;
   }
 
-  /* bocadillo de la celebración final */
+  /* bocadillo de la celebración final, junto a la cabeza */
   .salchi-guau {
     position: absolute;
-    right: calc(100% + 8px);
-    top: 50%;
-    translate: 0 -50%;
+    right: calc(100% - 4px);
+    top: 0.35rem;
     padding: 0.35rem 0.6rem;
     border-radius: 999px;
     background: var(--color-blanco);

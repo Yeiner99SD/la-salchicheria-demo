@@ -20,21 +20,25 @@ if (!reducido) {
 const rail = $('[data-salchi]');
 const portada = $('[data-portada]');
 
-if (rail) {
-  const cabeza = rail.querySelector<HTMLElement>('.salchi-cabeza')!;
-  const medir = () => rail.style.setProperty('--recorrido', `${rail.clientHeight - cabeza.offsetHeight}px`);
+const perro = rail?.querySelector<HTMLElement>('[data-salchi-perro]');
+
+if (rail && perro) {
+  // El cuerpo puede crecer hasta que las patas tocan el final de la barra.
+  // (offsetHeight del perro = cabeza + patas: el cuerpo que crece no ocupa sitio)
+  const medir = () => perro.style.setProperty('--largo', `${Math.max(0, rail.clientHeight - perro.offsetHeight)}px`);
   medir();
   ScrollTrigger.addEventListener('refreshInit', medir);
 
+  // Las patas se balancean un poco según la velocidad del scroll
   const inclinacion = { g: 0 };
   const giro = gsap.quickTo(inclinacion, 'g', {
     duration: 0.4,
     ease: 'power3',
-    onUpdate: () => rail.style.setProperty('--giro', `${inclinacion.g.toFixed(2)}deg`),
+    onUpdate: () => perro.style.setProperty('--giro', `${inclinacion.g.toFixed(2)}deg`),
   });
 
-  // Celebración al llegar al final: salto, vuelta y "¡Guau!"
-  const img = rail.querySelector('[data-salchi-img]');
+  // Celebración al llegar al final: Salchi levanta la cabeza y dice "¡Guau!"
+  const cabeza = perro.querySelector('.sl-arriba');
   const guau = rail.querySelector('[data-salchi-guau]');
   let celebrando = false;
   const celebrar = () => {
@@ -44,11 +48,9 @@ if (rail) {
     }
     gsap
       .timeline()
-      .to(img, { y: -18, duration: 0.25, ease: 'power2.out' })
-      .to(img, { rotate: 360, duration: 0.5, ease: 'power2.inOut' }, '<')
-      .to(img, { y: 0, duration: 0.5, ease: 'bounce.out' })
-      .set(img, { rotate: 0 })
-      .to(guau, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(3)' }, 0.2);
+      .to(cabeza, { y: -10, rotate: -8, transformOrigin: '60% 100%', duration: 0.22, ease: 'power2.out' })
+      .to(cabeza, { y: 0, rotate: 0, duration: 0.7, ease: 'elastic.out(1, 0.35)' })
+      .to(guau, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(3)' }, 0.15);
   };
   const descelebrar = () => gsap.to(guau, { opacity: 0, scale: 0.4, duration: 0.2 });
 
@@ -56,8 +58,8 @@ if (rail) {
     start: 0,
     end: 'max',
     onUpdate(self) {
-      rail.style.setProperty('--p', self.progress.toFixed(4));
-      if (!reducido) giro(gsap.utils.clamp(-14, 14, self.getVelocity() / 180));
+      perro.style.setProperty('--estira', self.progress.toFixed(4));
+      if (!reducido) giro(gsap.utils.clamp(-5, 5, self.getVelocity() / 400));
       if (self.progress > 0.985 && !celebrando) {
         celebrando = true;
         celebrar();
@@ -98,15 +100,18 @@ if (!reducido) {
   });
 
   tareas.push(() => {
-    /* Portada: al bajar, Salchi se estira hacia abajo y se va */
-    gsap.to('[data-portada-salchi]', {
-      scaleY: 1.6,
-      scaleX: 0.8,
-      yPercent: 30,
-      autoAlpha: 0,
-      ease: 'none',
-      scrollTrigger: { trigger: '[data-portada]', start: 'top top', end: 'bottom top', scrub: true },
-    });
+    /* Portada: al bajar, Salchi se estira de verdad: la cabeza sube con la página y las patas se quedan atrás.
+       Solo se anima --estira (fromTo, con valores de partida explícitos): así no pisa la animación
+       de entrada y al volver arriba Salchi queda entero y opaco, como al principio. */
+    gsap.fromTo(
+      '[data-portada-salchi] [data-salchi-largo]',
+      { '--estira': 0 },
+      {
+        '--estira': 1,
+        ease: 'none',
+        scrollTrigger: { trigger: '[data-portada]', start: 'top top', end: 'bottom top', scrub: true },
+      },
+    );
 
   });
 
