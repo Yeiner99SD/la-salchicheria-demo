@@ -65,6 +65,15 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 - **Rama `respaldo-rediseno-15-nov`** (solo local, sin publicar): guarda lo descartado, por si se quiere recuperar alguna pieza suelta con `git checkout respaldo-rediseno-15-nov -- <ruta>`:
   - 13/11: logotipo "la Salchi chería" en la portada (`logotipo-blanco.png`), capítulo 4 "Así se vive" con fotos de Instagram, galería solo con platos con foto, `Dato.astro` (datos pendientes como etiqueta con lápiz) y `presentacion/qr-demo.png` (cartel con QR a la demo).
   - 15/11: rediseño visual completo (patrón en portada, `Sello.astro`, `Cinta.astro`, pared de azulejo en el capítulo 3, `BarraAcciones.astro`).
+- **Rama `ajustes-16-nov` (sin publicar, pendiente de aprobación):** aplica el brief del 16/11. NO hacer merge ni push a `main` hasta que el usuario lo apruebe.
+  - Portada: «Ver carta» es el botón primario (a `/carta`), «Cómo llegar» el secundario. Frase de Salchi como anfitrión (`FRASE_SALCHI` en `negocio.ts`, **provisional**: falta elegir entre 3 opciones). La franja «DESLIZA» en bucle se sustituyó por un texto estático con flecha (`.baja-suave`, quieta con movimiento reducido).
+  - Capítulo 4 (`Catadores.astro`): solo reseñas, sin fotos. Tarjetas con texto, autor, «Google» con icono y fecha opcional. Datos en `RESENAS` (`negocio.ts`). Botón «Déjanos tu opinión en Google» → `enlaceResena` (usa `ENLACE_RESENA_GOOGLE` si ya es una URL; si no, la ficha de Maps). La entrada animada pasó de «posavasos que caen» a una subida suave.
+  - Ticket final: solo Salchi en SVG (se quitó el cartel «Cocina abierta»).
+  - Pie (`Pie.astro`): frases de marca en bloque estático (antes marquesina) + marca, Instagram con icono, dirección con enlace a Maps, teléfono, horario (de `src/lib/horario.ts`) y © con el año de compilación.
+  - `Icono.astro`: nuevos `instagram`, `google` y `pin`. `Base.astro`: prop `noindex`.
+  - **`/propuesta-galeria`**: propuesta de galería, con `noindex`, etiqueta «Propuesta · pendiente de aprobación» y sin enlaces desde ninguna otra página. 13 fotos reales + 9 `<FotoProvisional>`.
+  - Ya no queda ningún texto en bucle. La clase `.marquesina` sigue en `global.css` pero no se usa.
+  - Capítulos 2, 3 y cabecera del 5: comprobados idénticos píxel a píxel respecto a `main`.
 - **Web completa:** portada + capítulos 1–5 + pie, y **/carta** (carta completa con precios, enlazada con el botón "Ver la carta completa" al terminar el capítulo 1). `npm run build` sin errores.
 - **Demo publicada:** https://yeiner99sd.github.io/la-salchicheria-demo/ (repo público Yeiner99SD/la-salchicheria-demo). Cada push a `main` despliega con GitHub Actions; la demo lleva `noindex` (`PUBLIC_DEMO=true`). Enlaces internos con `ruta()` de `src/lib/ruta.ts` (respeta el `base`).
 - **Salchi en SVG:** `marca/logo.svg` (copiado en `src/assets/marca/salchi.svg`) se incrusta con `Salchi.astro`: `parte="entero" | "cabeza" | "cola"` encuadra el MISMO trazado con el viewBox, sin redibujar. Color con `currentColor`. La barra (`SalchiRail.astro`) usa cabeza y cola. Favicon: `public/favicon.svg`.
@@ -77,5 +86,7 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 
 ## Pendiente
 - **Del dueño:** precios de perritos, caña y sangría · carta de perritos · teléfono · resto de vinos (en la foto se intuyen blancos de 15, 18 y 22 €) · logotipo con texto en SVG · reseñas reales · fotos de local, terraza, barra, sangría, clientes y platos de la galería · dominio definitivo (al pasar a él, quitar `noindex` y cambiar `site` en `astro.config.mjs`).
+- **Del usuario, para cerrar la rama `ajustes-16-nov`:** elegir la frase de Salchi · pegar las reseñas reales en `RESENAS` · pasar el enlace `[ENLACE_RESEÑA_GOOGLE]` · aprobar (o no) la propuesta de galería · aprobar el merge a `main`.
+- **Ideas a futuro (no desarrollar aún):** foto real de la carta completa con zoom por secciones · que el bar elija los productos destacados de «Como Dios manda» (prioridad, ofertas, novedades).
 - **Mejoras propuestas, sin decidir:** tilde cortada en los títulos grandes ("ASÍ") · aprovechar mejor el espacio en escritorio (vaso y galería) · huecos visibles (`[PRECIO]`, `[Foto pendiente]`, `[Reseña real…]`, platos vacíos de la galería) · capítulo 3 hecho de marcadores de foto · QR para la presentación.
 - **Por probar:** la demo en iPhone (Safari) y en el navegador de Instagram; PageSpeed Insights sobre la URL publicada.
