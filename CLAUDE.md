@@ -59,7 +59,12 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 - Indicador **"¿Estamos abiertos ahora?"** calculado con el horario en zona horaria `Europe/Madrid`.
 - Antes de dar algo por terminado: ejecutar `npm run build` sin errores y revisar en móvil y escritorio.
 
-## Estado (13/11/2026)
+## Estado (16/11/2026)
+- **Versión de referencia: la publicada (commit `1cc3bf9`).** El 16/11 se volvió a ella a petición del usuario: la prefiere por limpia, con la portada (Salchi en SVG + lema) y los capítulos tal como están. `main` coincide con `origin/main`.
+- **Criterio de diseño:** mejorar SOBRE esta versión, con cambios pequeños y acordados antes. No recargar: nada de patrones de fondo, sellos, cintas entre capítulos, pegatinas ni barras fijas sin pedirlo. No rehacer la portada ni la estructura de los capítulos.
+- **Rama `respaldo-rediseno-15-nov`** (solo local, sin publicar): guarda lo descartado, por si se quiere recuperar alguna pieza suelta con `git checkout respaldo-rediseno-15-nov -- <ruta>`:
+  - 13/11: logotipo "la Salchi chería" en la portada (`logotipo-blanco.png`), capítulo 4 "Así se vive" con fotos de Instagram, galería solo con platos con foto, `Dato.astro` (datos pendientes como etiqueta con lápiz) y `presentacion/qr-demo.png` (cartel con QR a la demo).
+  - 15/11: rediseño visual completo (patrón en portada, `Sello.astro`, `Cinta.astro`, pared de azulejo en el capítulo 3, `BarraAcciones.astro`).
 - **Web completa:** portada + capítulos 1–5 + pie, y **/carta** (carta completa con precios, enlazada con el botón "Ver la carta completa" al terminar el capítulo 1). `npm run build` sin errores.
 - **Demo publicada:** https://yeiner99sd.github.io/la-salchicheria-demo/ (repo público Yeiner99SD/la-salchicheria-demo). Cada push a `main` despliega con GitHub Actions; la demo lleva `noindex` (`PUBLIC_DEMO=true`). Enlaces internos con `ruta()` de `src/lib/ruta.ts` (respeta el `base`).
 - **Salchi en SVG:** `marca/logo.svg` (copiado en `src/assets/marca/salchi.svg`) se incrusta con `Salchi.astro`: `parte="entero" | "cabeza" | "cola"` encuadra el MISMO trazado con el viewBox, sin redibujar. Color con `currentColor`. La barra (`SalchiRail.astro`) usa cabeza y cola. Favicon: `public/favicon.svg`.
@@ -69,3 +74,8 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 - **Reseñas:** marcadores `[Reseña real …]` en `src/data/negocio.ts`. No inventar opiniones.
 - **Animación:** `src/scripts/movimiento.ts`. Sin animaciones con `prefers-reduced-motion`. Iconos en SVG (`Icono.astro`): no usar glifos → ↓ ★ en el texto (fuerzan fuentes del sistema y encarecen la primera maquetación).
 - **Lighthouse móvil (local, Edge en Windows):** accesibilidad, buenas prácticas y SEO 100; rendimiento entre 75 y 94 según la pasada (mucho ruido local). Medir con PageSpeed Insights tras publicar.
+
+## Pendiente
+- **Del dueño:** precios de perritos, caña y sangría · carta de perritos · teléfono · resto de vinos (en la foto se intuyen blancos de 15, 18 y 22 €) · logotipo con texto en SVG · reseñas reales · fotos de local, terraza, barra, sangría, clientes y platos de la galería · dominio definitivo (al pasar a él, quitar `noindex` y cambiar `site` en `astro.config.mjs`).
+- **Mejoras propuestas, sin decidir:** tilde cortada en los títulos grandes ("ASÍ") · aprovechar mejor el espacio en escritorio (vaso y galería) · huecos visibles (`[PRECIO]`, `[Foto pendiente]`, `[Reseña real…]`, platos vacíos de la galería) · capítulo 3 hecho de marcadores de foto · QR para la presentación.
+- **Por probar:** la demo en iPhone (Safari) y en el navegador de Instagram; PageSpeed Insights sobre la URL publicada.
