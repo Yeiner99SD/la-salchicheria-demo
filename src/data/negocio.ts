@@ -88,11 +88,40 @@ export const BEBIDAS = {
  */
 export type Resena = { texto: string; autor: string; fecha?: string };
 
+// Reseñas reales de la ficha de Google Maps del bar, pasadas por el usuario en capturas el 16/11/2026.
+// Texto literal (con sus erratas: son citas). Las cinco tenían 5 estrellas.
+// Fecha: Google decía «hace un mes» / «hace una semana»; se pasa a mes y año para que no caduque.
 export const RESENAS: Resena[] = [
-  { texto: '[Reseña real de Google Maps: algo sobre las croquetas]', autor: '[Nombre]' },
-  { texto: '[Reseña real: algo sobre lo bien tirada que está la caña]', autor: '[Nombre]' },
-  { texto: '[Reseña real: algo sobre el ambiente de la plaza]', autor: '[Nombre]' },
-  { texto: '[Reseña real: algo sobre los perritos]', autor: '[Nombre]' },
+  {
+    autor: 'Paula Heras Dominguez',
+    fecha: 'octubre de 2026',
+    texto:
+      '¡Todo genial! El sitio está muy limpio, todo tiene muy buena pinta y la comida está riquísima. Además, los precios son muy buenos y la relación calidad-precio es excelente. Se nota el cuidado y la buena atención. Sin duda, un sitio muy recomendable para comer en Salamanca. ¡Repetiremos!',
+  },
+  {
+    autor: 'Mda',
+    fecha: 'noviembre de 2026',
+    texto:
+      'Gran descubrimiento. Me parece mentira que siendo de salamanca aún no hubiera ido por allí.\nFuimos 4 a merendar un poquito. Huevos rotos, perritos en pan brioche, costillas( esencial probarlas).\nLos camareros muy pendientes de todo.\nRecomiendo mucho ir',
+  },
+  {
+    autor: 'Jesus Jimenez',
+    fecha: 'octubre de 2026',
+    texto:
+      'Hay que venir a probarlo, después de 2 días he podido pillar un sitio. Recomendable 100% no defrauda, comida muy muy rica además de lo de las fotos probé también lagrimitas de pollo riquísimas.\nSi decides ir, ve con antelación siempre está lleno, me gustaría haber probado más tapas.. pero no se puede todo en una comida..',
+  },
+  {
+    autor: 'Mari Gonzalez',
+    fecha: 'octubre de 2026',
+    texto:
+      'Fuimos mi marido y yo el miércoles por la noche y la experiencia fue muy buena. Nos atendió un camarero encantador, Erick, que nos dio muy buenas recomendaciones y fue muy amable y atento en todo momento.\n\nLa comida nos gustó mucho, especialmente, destacaría la jeta, que estaba buenísima. Sin duda, un sitio para repetir tanto por la comida como por el trato recibido.',
+  },
+  {
+    autor: 'BONSAI EN CORTO',
+    fecha: 'octubre de 2026',
+    texto:
+      'Pues creemos cambio de carta y dirección y un interesante giro a favor del viento. Mahou en caña es la única pega que le puedo poner. Hemos pedido anillas, croquetas y una hamburguesa. Todo muy bueno y de excelente calidad. Creemos que la harina de las croquetas se tostón un poco mas de la cuenta pero por lo demas muy buena calidad y buen producto. Felicidades, este es el camino.',
+  },
 ];
 
 export const MAPA_EMBED =
