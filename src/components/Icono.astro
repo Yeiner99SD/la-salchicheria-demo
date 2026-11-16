@@ -1,13 +1,17 @@
 ---
 /** Iconos en SVG para no depender de glifos (→ ↓ ★) que las fuentes web no traen. */
 interface Props {
-  nombre: 'flecha' | 'abajo' | 'estrella';
+  nombre: 'flecha' | 'abajo' | 'estrella' | 'instagram' | 'google' | 'pin';
   class?: string;
 }
 const { nombre, class: clase = 'inline-block size-[0.9em] align-[-0.1em]' } = Astro.props;
 const trazos = {
   flecha: '<path d="M3 10h13M11 4l6 6-6 6"/>',
   abajo: '<path d="M10 2v15M4 11l6 6 6-6"/>',
+  // Redes y mapa, a una tinta (se colorean con currentColor, como el resto)
+  instagram: '<rect x="2.5" y="2.5" width="15" height="15" rx="4.5"/><circle cx="10" cy="10" r="3.4"/><circle cx="14.3" cy="5.7" r="0.6" fill="currentColor"/>',
+  google: '<path d="M17.2 10H10.4M17.2 10a7.2 7.2 0 1 1-2.1-5.1"/>',
+  pin: '<path d="M10 18s6-5.3 6-10.2a6 6 0 1 0-12 0C4 12.7 10 18 10 18z"/><circle cx="10" cy="7.8" r="2"/>',
   estrella: '<path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6L10 15l-5.4 3 1.2-6L1.3 7.8l6.1-.7z" fill="currentColor" stroke="none"/>',
 };
 ---

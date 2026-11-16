@@ -1,20 +1,88 @@
 ---
+/**
+ * Pie de página. Arriba, las frases de la marca en un bloque tipográfico ESTÁTICO
+ * (antes era una franja en movimiento). Debajo: quiénes somos, dónde, horario y redes.
+ * El horario sale de src/lib/horario.ts: no se escribe a mano aquí.
+ */
+import Salchi from './Salchi.astro';
+import Icono from './Icono.astro';
 import { NEGOCIO } from '../data/negocio';
+import { HORARIO_LEGIBLE } from '../lib/horario';
+
 const lemas = ['Comer bien', 'Beber mejor', 'Pasear lo justo'];
+const anio = new Date().getFullYear();
 ---
 
-<footer class="overflow-hidden bg-rojo pb-8 text-blanco">
-  <div class="border-y-2 border-blanco/30 py-4" aria-hidden="true">
-    <div class="marquesina font-condensada text-3xl tracking-wide uppercase sm:text-5xl">
-      {[0, 1].map(() => (
-        <span class="flex shrink-0">
-          {[0, 1, 2].map(() => lemas.map((l) => <span class="px-5">{l} <span class="px-3">|</span></span>))}
-        </span>
+<footer class="bg-rojo text-blanco">
+  <!-- Frases de marca: bloque en condensada, una por línea en móvil y en fila en pantallas anchas -->
+  <div class="border-y-2 border-blanco/30">
+    <p class="con-rail mx-auto flex max-w-6xl flex-col gap-x-6 px-4 py-8 font-condensada text-[clamp(2.75rem,13vw,4.25rem)] leading-[0.95] tracking-wide uppercase sm:px-8 md:flex-row md:items-center md:justify-between md:py-10 lg:text-[clamp(3rem,5.6vw,5.25rem)]">
+      {lemas.map((l, i) => (
+        <Fragment>
+          {i > 0 && <span aria-hidden="true" class="hidden text-blanco/50 md:inline">|</span>}
+          <span>{l}</span>
+        </Fragment>
       ))}
+    </p>
+  </div>
+
+  <div class="con-rail mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-8 md:grid-cols-[1.3fr_1fr_1fr] md:gap-8">
+    <!-- Marca y redes -->
+    <div>
+      <div class="flex items-center gap-4">
+        <Salchi class="h-16 w-auto shrink-0 text-blanco" />
+        <p class="font-titular text-xl leading-tight uppercase">
+          La Salchichería<br />· Oeste 7
+        </p>
+      </div>
+      <p class="mt-4 text-sm">Hambre no vais a pasar · Sed tampoco</p>
+      <a
+        href={NEGOCIO.instagram}
+        class="btn mt-6 border-2 border-blanco text-blanco"
+        rel="noopener"
+        target="_blank"
+      >
+        <Icono nombre="instagram" class="inline-block size-[1.4em]" />
+        {NEGOCIO.instagramUser}<span class="sr-only"> (Instagram, se abre en otra pestaña)</span>
+      </a>
+    </div>
+
+    <!-- Dónde y contacto -->
+    <div>
+      <p class="font-mano text-xl -rotate-1">Dónde</p>
+      <a
+        href={NEGOCIO.comoLlegar}
+        class="mt-3 inline-flex items-start gap-2 text-sm leading-relaxed underline underline-offset-4"
+        rel="noopener"
+        target="_blank"
+      >
+        <Icono nombre="pin" class="mt-0.5 inline-block size-[1.3em] shrink-0" />
+        <span>
+          {NEGOCIO.direccion.calle}<br />
+          {NEGOCIO.direccion.cp} {NEGOCIO.direccion.ciudad}<span class="sr-only"> (cómo llegar con Google Maps, se abre en otra pestaña)</span>
+        </span>
+      </a>
+
+      <p class="mt-7 font-mano text-xl -rotate-1">Contacto</p>
+      <p class="mt-3 text-sm">Teléfono: <span class="font-bold">{NEGOCIO.telefono}</span></p>
+    </div>
+
+    <!-- Horario -->
+    <div>
+      <p class="font-mano text-xl -rotate-1">Horario</p>
+      <dl class="mt-3 space-y-3 text-sm">
+        {HORARIO_LEGIBLE.map((h) => (
+          <div>
+            <dt>{h.dias}</dt>
+            <dd class="font-bold">{h.horas}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-4 text-xs">Sin reservas: según llegas te hacemos hueco.</p>
     </div>
   </div>
-  <div class="con-rail mx-auto flex max-w-6xl flex-col gap-2 px-4 pt-8 text-xs sm:flex-row sm:justify-between sm:px-8">
-    <p>© 2026 {NEGOCIO.nombre} · {NEGOCIO.direccion.calle} · {NEGOCIO.direccion.cp} {NEGOCIO.direccion.ciudad}</p>
-    <p>Hambre no vais a pasar · Sed tampoco</p>
+
+  <div class="border-t-2 border-dashed border-blanco/40">
+    <p class="con-rail mx-auto max-w-6xl px-4 py-6 text-xs sm:px-8">© {anio} {NEGOCIO.nombreCompleto}</p>
   </div>
 </footer>

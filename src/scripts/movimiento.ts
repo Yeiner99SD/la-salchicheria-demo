@@ -239,17 +239,16 @@ if (!reducido) {
   });
 
   tareas.push(() => {
-    /* 4 · Los posavasos caen sobre la mesa */
+    /* 4 · Las reseñas suben una a una (entrada tranquila: aquí lo importante es leer) */
     const mesa = $('[data-posavasos]');
     if (mesa) {
       gsap.from(mesa.querySelectorAll('[data-posavaso]'), {
-        y: () => -window.innerHeight * 0.9,
-        rotation: () => gsap.utils.random(-120, 120),
+        y: 50,
         autoAlpha: 0,
-        duration: 1.1,
-        ease: 'bounce.out',
-        stagger: { each: 0.12, from: 'random' },
-        scrollTrigger: { trigger: mesa, start: 'top 75%' },
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: 0.12,
+        scrollTrigger: { trigger: mesa, start: 'top 80%' },
       });
     }
 
@@ -275,8 +274,7 @@ if (!reducido) {
     });
     gsap
       .timeline({ scrollTrigger: { trigger: '[data-final-salchi]', start: 'top 85%' } })
-      .from('[data-final-salchi]', { scaleY: 0.4, scaleX: 1.1, duration: 1, ease: 'elastic.out(1, 0.4)' })
-      .from('[data-final-cartel]', { y: -60, rotation: -30, autoAlpha: 0, duration: 0.8, ease: 'back.out(2)' }, 0.2);
+      .from('[data-final-salchi]', { scaleY: 0.4, scaleX: 1.1, duration: 1, ease: 'elastic.out(1, 0.4)' });
   });
 
   const siguiente = () => {

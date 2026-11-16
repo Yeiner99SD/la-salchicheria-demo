@@ -1,10 +1,9 @@
 ---
 import Salchi from './Salchi.astro';
 import AbiertoAhora from './AbiertoAhora.astro';
-import { NEGOCIO } from '../data/negocio';
-
-const desliza = Array.from({ length: 8 }, () => 'DESLIZA');
 import Icono from './Icono.astro';
+import { NEGOCIO, FRASE_SALCHI } from '../data/negocio';
+import { ruta } from '../lib/ruta';
 ---
 
 <header id="portada" data-portada class="relative flex min-h-svh flex-col overflow-hidden bg-rojo text-blanco">
@@ -18,9 +17,11 @@ import Icono from './Icono.astro';
 
   <div class="con-rail relative flex flex-1 flex-col items-center justify-center px-4 pt-6 pb-4 text-center sm:px-8">
     <!-- Salchi encogido (SVG oficial en blanco) -->
-    <div data-portada-salchi class="respira mb-6 w-[34vw] max-w-[170px] min-w-[118px] sm:mb-8">
+    <div data-portada-salchi class="respira mb-4 w-[34vw] max-w-[170px] min-w-[118px] sm:mb-5">
       <Salchi titulo="Salchi, el perro salchicha con gafas de sol de La Salchichería" class="h-auto w-full text-blanco" />
     </div>
+    <!-- Salchi se presenta: es el anfitrión que acompaña toda la visita (la barra de la derecha es él) -->
+    <p data-lema class="mb-5 font-mano text-lg -rotate-2 sm:mb-6 sm:text-2xl">{FRASE_SALCHI}</p>
 
     <h1 class="font-titular leading-[0.92] text-balance uppercase">
       <span class="sr-only">La Salchichería, bar en la Plaza del Oeste de Salamanca. </span>
@@ -30,29 +31,36 @@ import Icono from './Icono.astro';
       </span>
     </h1>
 
-    <div data-portada-info class="mt-8 flex flex-col items-center gap-5">
+    <div data-portada-info class="mt-7 flex flex-col items-center gap-5">
       <AbiertoAhora />
-      <div class="flex flex-wrap items-center justify-center gap-3">
-        <a href={NEGOCIO.comoLlegar} class="btn bg-blanco text-rojo" rel="noopener" target="_blank">
-          Cómo llegar <Icono nombre="flecha" /><span class="sr-only"> (Google Maps, se abre en otra pestaña)</span>
+      <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-4">
+        <!-- Primario: la carta, a un toque -->
+        <a href={ruta('carta/')} class="btn btn-primario bg-blanco px-8 text-base text-rojo sm:text-lg">
+          Ver carta <Icono nombre="flecha" />
         </a>
-        <a href="#comer" class="btn border-2 border-blanco text-blanco">Ver la carta</a>
+        <!-- Secundario -->
+        <a href={NEGOCIO.comoLlegar} class="btn border-2 border-blanco text-blanco" rel="noopener" target="_blank">
+          Cómo llegar<span class="sr-only"> (Google Maps, se abre en otra pestaña)</span>
+        </a>
       </div>
       <p class="text-xs">{NEGOCIO.direccion.calle} · {NEGOCIO.direccion.ciudad}</p>
     </div>
   </div>
 
-  <!-- Pista de "desliza" -->
-  <a href="#comer" class="block border-t-2 border-blanco/30 py-3 text-blanco">
-    <span class="sr-only">Desliza para entrar al bar</span>
-    <div class="overflow-hidden" aria-hidden="true">
-      <div class="marquesina font-condensada text-2xl tracking-wider sm:text-3xl">
-        {[0, 1].map(() => (
-          <span class="flex shrink-0">
-            {desliza.map((d) => <span class="px-4">{d} <Icono nombre="abajo" class="inline-block size-[0.8em] align-[-0.05em]" /></span>)}
-          </span>
-        ))}
-      </div>
-    </div>
+  <!-- Indicación de scroll: discreta y estática (solo la flecha baja un poco, despacio) -->
+  <a href="#comer" class="mx-auto mb-5 inline-flex min-h-11 items-center gap-2 px-4 text-[11px] tracking-[0.18em] uppercase sm:text-xs">
+    Desliza para entrar al bar
+    <Icono nombre="abajo" class="baja-suave inline-block size-[1.15em]" />
   </a>
 </header>
+
+<style>
+  /* Botón primario de la portada: más cuerpo y sombra dura para que mande sobre el secundario */
+  .btn-primario {
+    min-height: 56px;
+    box-shadow: 5px 5px 0 var(--color-rojo-oscuro);
+  }
+  .btn-primario:hover {
+    box-shadow: 7px 7px 0 var(--color-rojo-oscuro);
+  }
+</style>

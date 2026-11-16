@@ -127,3 +127,14 @@ html.motion .galeria {
     min-height: 100vh;
   }
 }
+
+/* Flecha del indicador de scroll de la portada: baja un poco, despacio.
+   Con prefers-reduced-motion queda quieta (regla general de arriba). */
+.baja-suave {
+  animation: baja-suave 2.6s ease-in-out infinite;
+}
+@keyframes baja-suave {
+  50% {
+    transform: translateY(4px);
+  }
+}

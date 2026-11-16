@@ -81,14 +81,36 @@ export const BEBIDAS = {
   vinosPendientes: '[Resto de la carta de vinos: blancos de Rueda y Jumilla, entre otros]',
 };
 
-export const RESENAS_PENDIENTES = [
-  '[Reseña real de Google Maps: algo sobre las croquetas]',
-  '[Reseña real: algo sobre lo bien tirada que está la caña]',
-  '[Reseña real: algo sobre el ambiente de la plaza]',
-  '[Reseña real: algo sobre los perritos]',
+/**
+ * Reseñas del capítulo 4. SOLO reseñas reales de Google: pegar aquí el texto tal cual,
+ * el nombre del autor y, si se sabe, la fecha (texto libre: "octubre de 2026", "hace 2 semanas"…).
+ * Mientras sean marcadores entre corchetes, la web los muestra como pendientes. No inventar ninguna.
+ */
+export type Resena = { texto: string; autor: string; fecha?: string };
+
+export const RESENAS: Resena[] = [
+  { texto: '[Reseña real de Google Maps: algo sobre las croquetas]', autor: '[Nombre]' },
+  { texto: '[Reseña real: algo sobre lo bien tirada que está la caña]', autor: '[Nombre]' },
+  { texto: '[Reseña real: algo sobre el ambiente de la plaza]', autor: '[Nombre]' },
+  { texto: '[Reseña real: algo sobre los perritos]', autor: '[Nombre]' },
 ];
 
 export const MAPA_EMBED =
   'https://www.google.com/maps?output=embed&q=' + encodeURIComponent('Plaza del Oeste 7, 37007 Salamanca');
+/** Ficha del bar en Google Maps */
 export const MAPA_RESENAS =
   'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('La Salchichería Plaza del Oeste 7 Salamanca');
+
+/**
+ * Enlace directo para escribir una reseña. Sustituir el marcador por la URL real, con el formato
+ * https://search.google.com/local/writereview?placeid=…
+ * Mientras siga el marcador, el botón «Déjanos tu opinión en Google» lleva a la ficha de Google Maps.
+ */
+export const ENLACE_RESENA_GOOGLE = '[ENLACE_RESEÑA_GOOGLE]';
+export const enlaceResena = ENLACE_RESENA_GOOGLE.startsWith('http') ? ENLACE_RESENA_GOOGLE : MAPA_RESENAS;
+
+/**
+ * Frase con la que Salchi se presenta en la portada como anfitrión.
+ * PENDIENTE de elegir entre 3 opciones (ver CLAUDE.md); de momento, la primera.
+ */
+export const FRASE_SALCHI = 'Soy Salchi. Tú baja, que yo me estiro.';

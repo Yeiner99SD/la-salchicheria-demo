@@ -1,7 +1,5 @@
 ---
-import { Image } from 'astro:assets';
 import Salchi from './Salchi.astro';
-import cocinaAbierta from '../assets/marca/ig-cocina-abierta.jpg';
 import AbiertoAhora from './AbiertoAhora.astro';
 import { NEGOCIO } from '../data/negocio';
 import { HORARIO_LEGIBLE } from '../lib/horario';
@@ -70,19 +68,9 @@ import Icono from './Icono.astro';
 
       <!-- Salchi celebra -->
       <div class="mx-auto flex w-full max-w-sm flex-col items-center text-center">
-        <div class="flex w-full items-end justify-center gap-4">
-        <div data-final-cartel class="order-2 mb-6 w-[36%] rotate-[7deg] shadow-[0_10px_0_-2px_var(--color-rojo-oscuro)]">
-          <Image
-            src={cocinaAbierta}
-            alt="Cartel de La Salchichería: cocina abierta de lunes a domingo, con cazos y espumaderas colgando."
-            widths={[200, 400]}
-            sizes="160px"
-            class="h-auto w-full"
-          />
-        </div>
-        <div data-final-salchi class="grid aspect-square w-[56%] max-w-[220px] origin-bottom place-items-center rounded-full bg-blanco">
+        <!-- Solo Salchi (SVG oficial): es quien cierra la visita -->
+        <div data-final-salchi class="grid aspect-square w-[62%] max-w-[240px] origin-bottom place-items-center rounded-full bg-blanco">
           <Salchi titulo="Salchi, la mascota, celebrando que has llegado al final" class="h-[72%] w-auto text-rojo" />
-        </div>
         </div>
         <p class="mt-6 font-mano text-2xl -rotate-2 sm:text-3xl">La vida según Salchi:</p>
         <p class="mt-2 font-titular text-xl uppercase">Si has llegado hasta aquí, ya tienes hambre.</p>

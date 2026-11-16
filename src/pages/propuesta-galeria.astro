@@ -1,0 +1,172 @@
+---
+/**
+ * PROPUESTA de página de galería, pendiente de aprobación.
+ * No está enlazada desde la portada, los capítulos ni el pie, y lleva noindex.
+ * Solo usa fotos reales de src/assets/fotos; lo que falta se marca con <FotoProvisional>.
+ */
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Salchi from '../components/Salchi.astro';
+import Icono from '../components/Icono.astro';
+import FotoProvisional from '../components/FotoProvisional.astro';
+import Pie from '../components/Pie.astro';
+import { ruta } from '../lib/ruta';
+
+import cocinero from '../assets/fotos/cocinero-camiseta.jpg';
+import perritoSalchi from '../assets/fotos/perrito-estilo-salchi.jpg';
+import perritoQueso from '../assets/fotos/perrito-queso.jpg';
+import perritosPlato from '../assets/fotos/perritos-plato.jpg';
+import perritoCamiseta from '../assets/fotos/perrito-camiseta.jpg';
+import anillasCamiseta from '../assets/fotos/anillas-camiseta.jpg';
+import anillasRotulo from '../assets/fotos/anillas-rotulo.jpg';
+import anillasAlioli from '../assets/fotos/anillas-alioli.jpg';
+import canaGrifo from '../assets/fotos/cana-grifo.jpg';
+import cartelCanitas from '../assets/fotos/cartel-canitas.jpg';
+import cartelDePicar from '../assets/fotos/cartel-de-picar.jpg';
+import cartelVinitos from '../assets/fotos/cartel-vinitos.jpg';
+import carta from '../assets/fotos/carta.jpg';
+
+type IconoFoto = 'cana' | 'copa' | 'jarra' | 'local' | 'barra' | 'plaza' | 'brindis' | 'perrito';
+type Tono = 'rojo' | 'peltre' | 'cerveza' | 'junta' | 'blanco';
+type Pieza =
+  | { real: ImageMetadata; alt: string; pie: string; ratio?: string }
+  | { falta: string; icono: IconoFoto; tono: Tono; ratio?: string };
+
+const secciones: { id: string; titulo: string; nota: string; piezas: Pieza[] }[] = [
+  {
+    id: 'local',
+    titulo: 'El local',
+    nota: 'La fachada, la sala y la cocina abierta.',
+    piezas: [
+      { falta: 'la fachada de La Salchichería desde la plaza', icono: 'local', tono: 'rojo', ratio: '4 / 5' },
+      { real: cocinero, alt: 'Un cocinero de espaldas en la cocina, con la camiseta blanca de Salchi en rojo y delantal negro.', pie: 'La cocina, abierta' },
+      { falta: 'la sala con las mesas, de día', icono: 'local', tono: 'junta', ratio: '1 / 1' },
+      { falta: 'la cocina abierta vista desde la sala', icono: 'barra', tono: 'peltre', ratio: '3 / 2' },
+    ],
+  },
+  {
+    id: 'comida',
+    titulo: 'La comida',
+    nota: 'Con flash, manos y plato de peltre. Como en su Instagram.',
+    piezas: [
+      { real: perritoSalchi, alt: 'Perrito estilo Salchi en su caja de cartón, con salsa, queso y cebolla encurtida rosa, sobre fondo rojo.', pie: 'Perrito estilo Salchi' },
+      { real: anillasCamiseta, alt: 'Plato de peltre con anillas a la andaluza y alioli, sujeto por alguien con la camiseta del bar.', pie: 'Anillas a la andaluza' },
+      { real: perritoQueso, alt: 'Perrito con queso fundido, cebolla frita y patatas paja en su caja de cartón.', pie: 'Con queso y patatas paja' },
+      { real: perritosPlato, alt: 'Dos perritos con queso, salsa y patatas paja sobre un plato de peltre, camino de la mesa.', pie: 'A la mesa' },
+      { real: anillasRotulo, alt: 'Unas pinzas sirven anillas a la andaluza en un plato de peltre.', pie: 'Recién servidas' },
+      { real: perritoCamiseta, alt: 'Perrito estilo Salchi delante de una camiseta con el logotipo de La Salchichería.', pie: 'De la casa' },
+    ],
+  },
+  {
+    id: 'barra',
+    titulo: 'La barra y la terraza',
+    nota: 'Donde se tiran las cañas y donde se alarga la tarde.',
+    piezas: [
+      { real: canaGrifo, alt: 'Una caña tirándose del grifo con flash, con la espuma subiendo blanca y cremosa.', pie: 'Cañas bien tiradas' },
+      { falta: 'la barra con azulejo blanco y junta verde', icono: 'barra', tono: 'junta', ratio: '1 / 1' },
+      { falta: 'la terraza en la Plaza del Oeste, de tarde', icono: 'plaza', tono: 'peltre', ratio: '3 / 2' },
+      { falta: 'copas de vino blanco en la barra', icono: 'copa', tono: 'blanco', ratio: '4 / 5' },
+    ],
+  },
+  {
+    id: 'ambiente',
+    titulo: 'El ambiente',
+    nota: 'La gente, que es lo que llena un bar.',
+    piezas: [
+      { falta: 'clientes brindando con cañas en la barra', icono: 'brindis', tono: 'cerveza', ratio: '3 / 2' },
+      { falta: 'la terraza llena un sábado a mediodía', icono: 'plaza', tono: 'rojo', ratio: '4 / 5' },
+      { falta: 'una mesa compartiendo sangría', icono: 'jarra', tono: 'peltre', ratio: '1 / 1' },
+    ],
+  },
+  {
+    id: 'detalles',
+    titulo: 'Detalles con personalidad',
+    nota: 'La carta, los carteles y todo lo que lleva la firma de Salchi.',
+    piezas: [
+      { real: cartelCanitas, alt: 'Cartel de la marca: Salchi con una caña y el texto «Cañitas muy bien tiradas».', pie: 'Cañitas muy bien tiradas' },
+      { real: carta, alt: 'La carta de La Salchichería en hojas con anilla, impresa en rojo.', pie: 'La carta' },
+      { real: cartelDePicar, alt: 'Cartel de la marca: Salchi con la carta y el texto «De picar o de comer».', pie: 'De picar o de comer' },
+      { real: anillasAlioli, alt: 'Anillas a la andaluza sobre un patrón de texto repetido: «tostado con alioli de ajo».', pie: 'Alioli de ajo tostado' },
+      { real: cartelVinitos, alt: 'Cartel de la marca: Salchi con una copa y una botella, y el texto «Vinitos de la tierra».', pie: 'Vinitos de la tierra' },
+    ],
+  },
+];
+
+const reales = secciones.flatMap((s) => s.piezas).filter((p) => 'real' in p).length;
+const pendientes = secciones.flatMap((s) => s.piezas).length - reales;
+---
+
+<Base
+  noindex
+  title="Propuesta de galería | La Salchichería · Oeste 7"
+  description="Propuesta de página de galería para La Salchichería, pendiente de aprobación."
+>
+  <!-- Aviso: esto es una propuesta, no una página publicada -->
+  <p class="bg-peltre px-4 py-2.5 text-center font-titular text-xs tracking-wide text-blanco uppercase sm:text-sm">
+    Propuesta · pendiente de aprobación
+  </p>
+
+  <header class="bg-rojo text-blanco">
+    <div class="mx-auto max-w-6xl px-4 pt-4 text-[11px] tracking-[0.18em] uppercase sm:px-8 sm:text-xs">
+      <a href={ruta()} class="inline-flex min-h-11 items-center gap-2 font-bold underline-offset-4 hover:underline">
+        <Icono nombre="flecha" class="inline-block size-[1.1em] rotate-180" /> Volver al bar
+      </a>
+    </div>
+    <div class="mx-auto flex max-w-6xl items-end gap-5 px-4 pt-6 pb-10 sm:px-8 sm:pt-10">
+      <div class="min-w-0 flex-1">
+        <p class="font-mano text-xl -rotate-2 sm:text-2xl">La vida según Salchi</p>
+        <h1 class="mt-3 font-condensada text-[clamp(4rem,20vw,9rem)] leading-[0.9] uppercase">Galería</h1>
+        <p class="mt-4 max-w-md text-sm leading-relaxed sm:text-base">
+          Así se vería el bar en fotos. Hoy hay {reales} fotos reales; las {pendientes} tarjetas de color marcan las que faltan por hacer.
+        </p>
+      </div>
+      <Salchi class="mb-2 w-[22vw] max-w-[130px] min-w-[72px] shrink-0 text-blanco" />
+    </div>
+  </header>
+
+  <!-- Índice de secciones -->
+  <nav aria-label="Secciones de la galería" class="sticky top-0 z-40 border-b-2 border-rojo bg-blanco">
+    <ul class="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 py-3 [scrollbar-width:none] sm:px-8">
+      {secciones.map((s) => (
+        <li class="shrink-0">
+          <a href={`#${s.id}`} class="inline-flex min-h-10 items-center rounded-full border-2 border-rojo px-4 font-titular text-xs uppercase hover:bg-rojo hover:text-blanco">
+            {s.titulo}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <main id="contenido" class="mx-auto max-w-6xl px-4 pb-20 sm:px-8">
+    {secciones.map((s) => (
+      <section id={s.id} aria-labelledby={`${s.id}-titulo`} class="scroll-mt-20 pt-14">
+        <h2 id={`${s.id}-titulo`} class="font-titular text-[clamp(1.9rem,8vw,3.5rem)] leading-none uppercase">{s.titulo}</h2>
+        <p class="mt-2 font-mano text-lg -rotate-1 sm:text-xl">{s.nota}</p>
+
+        <!-- Mosaico en columnas: cada pieza conserva su proporción -->
+        <ul class="mt-8 columns-2 gap-4 md:columns-3 md:gap-6">
+          {s.piezas.map((p) => (
+            <li class="mb-4 break-inside-avoid md:mb-6">
+              {'real' in p ? (
+                <figure>
+                  <Image
+                    src={p.real}
+                    alt={p.alt}
+                    widths={[240, 400, 640]}
+                    sizes="(min-width: 1152px) 350px, (min-width: 768px) 30vw, 45vw"
+                    class="h-auto w-full rounded-[1.25rem]"
+                  />
+                  <figcaption class="mt-2 text-xs tracking-wide uppercase">{p.pie}</figcaption>
+                </figure>
+              ) : (
+                <FotoProvisional foto={p.falta} icono={p.icono} tono={p.tono} ratio={p.ratio} class="rounded-[1.25rem]" />
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </main>
+
+  <Pie />
+</Base>
