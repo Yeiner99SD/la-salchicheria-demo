@@ -45,25 +45,37 @@ Los colores, las letras y el tono son los de vuestro Instagram: rojo y blanco, f
 
 | Página | Qué es | Dirección |
 |---|---|---|
-| **Carta completa** | Todos los platos con su precio, por secciones: perritos, pintxos, clásicos, huerta y bebidas. | [/carta](https://yeiner99sd.github.io/la-salchicheria-demo/carta/) |
-| **Panel de la casa** | Donde elegís los platos destacados. Es de prueba (ver abajo). | [/admin](https://yeiner99sd.github.io/la-salchicheria-demo/admin/) |
+| **Carta completa** | Todos los platos y bebidas con su precio, por secciones: perritos, pintxos, clásicos, huerta, para beber y vinos. Sin fotos: solo productos y precios, rápida de leer en el móvil. | [/carta](https://yeiner99sd.github.io/la-salchicheria-demo/carta/) |
+| **Panel de la casa** | Donde elegís los platos destacados y editáis la carta completa. Es de prueba (ver abajo). | [/admin](https://yeiner99sd.github.io/la-salchicheria-demo/admin/) |
 | **Propuesta de galería** | Una idea de página de fotos, pendiente de que la aprobéis. | [/propuesta-galeria](https://yeiner99sd.github.io/la-salchicheria-demo/propuesta-galeria/) |
 
 El panel y la galería no están enlazados desde la web: solo se llega a ellos con su dirección.
 
 ## Lo que podéis cambiar vosotros
 
-En el **Panel de la casa** se decide qué sale en «Como Dios manda»:
+El **Panel de la casa** tiene dos partes.
+
+**1. Destacados**, lo que sale en «Como Dios manda»:
 
 - Añadir un plato de la carta o uno nuevo.
 - Cambiarle el nombre, el precio y la descripción.
 - Ponerle una etiqueta: **Top**, **Promo** o **Nuevo**.
 - Elegirle una foto, ocultarlo sin borrarlo y cambiar el orden.
 
-**Ahora mismo es una demostración.** Dos cosas a tener en cuenta:
+**2. Carta completa**, lo que sale en la página de la carta:
+
+- Cambiar el nombre, la descripción y el precio de cualquier plato o bebida.
+- Añadir y quitar platos, y cambiarlos de orden.
+- Añadir, renombrar, quitar y reordenar secciones (por ejemplo, crear una de «Postres»), con una nota opcional como «Para compartir».
+- Volver a la carta de partida con un botón.
+
+Los platos que añadáis a la carta aparecen también para elegirlos como destacados.
+
+**Ahora mismo es una demostración.** Tres cosas a tener en cuenta:
 
 - Los cambios solo se ven en el móvil u ordenador donde se hacen. Sirve para probar cómo funcionaría, no para cambiar la web de verdad.
 - No tiene contraseña ni se pueden subir fotos nuevas: se elige entre las que ya están cargadas.
+- Los precios que salen dentro del recorrido (por ejemplo, el de la caña en el capítulo 2) todavía no se cambian desde el panel; los de la página de la carta, sí.
 
 En la versión definitiva el panel tendrá contraseña, los cambios los verá todo el mundo y se podrán subir fotos.
 

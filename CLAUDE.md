@@ -59,7 +59,13 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 - Indicador **"¿Estamos abiertos ahora?"** calculado con el horario en zona horaria `Europe/Madrid`.
 - Antes de dar algo por terminado: ejecutar `npm run build` sin errores y revisar en móvil y escritorio.
 
-## Estado (16/11/2026)
+## Estado (17/11/2026)
+- **Rama `carta-editable` (17/11, sin publicar, pendiente de aprobación):**
+  - `/carta` **sin imágenes**: solo secciones, productos y precios. Un plato sin precio sale sin precio ni línea de puntos.
+  - **Carta editable desde `/admin`** (parte 2 del panel, «Carta completa»): secciones (nombre, nota, orden, añadir, quitar) y platos (nombre, descripción, precio, orden, añadir, quitar), más «Restaurar la carta de partida». Mismo modelo que los destacados: localStorage (`CLAVE_CARTA`), solo se ve en el navegador donde se edita.
+  - Datos en `src/data/carta.ts`: `SeccionCarta` / `PlatoCarta`, `CARTA_INICIAL` (construida con `CARTA_COMPLETA` y `BEBIDAS` de `negocio.ts`; las bebidas pasan a ser las secciones «Para beber» y «Blancos»), `validarCarta` y `leerCarta`. El id de cada sección (ancla del índice) sale del nombre.
+  - `src/scripts/carta.ts` pinta en `/carta` la carta guardada con las `<template>` de la página (todo con `textContent`). `src/scripts/admin-carta.ts` es el editor; avisa con el evento `carta-cambiada` y el desplegable «Añadir de la carta» de los destacados se rellena con la carta editada.
+  - **Límite conocido:** los precios del capítulo 2 (caña, sangría, vinos en `BeberMejor.astro`) siguen saliendo de `BEBIDAS` y no cambian desde el panel.
 - **Publicado el 16/11/2026:** `main` incluye la rama `ajustes-16-nov`, aprobada por el usuario. La base es la versión limpia del commit `1cc3bf9` (portada con Salchi en SVG + lema y capítulos tal como estaban), a la que se volvió el 16/11 tras descartar un rediseño más recargado.
 - **Criterio de diseño:** mejorar SOBRE esta versión, con cambios pequeños y acordados antes. No recargar: nada de patrones de fondo, sellos, cintas entre capítulos, pegatinas ni barras fijas sin pedirlo. No rehacer la portada ni la estructura de los capítulos.
 - **Rama `respaldo-rediseno-15-nov`** (solo local, sin publicar): guarda lo descartado, por si se quiere recuperar alguna pieza suelta con `git checkout respaldo-rediseno-15-nov -- <ruta>`:
@@ -83,7 +89,7 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
   - **Reseñas reales:** 5 de la ficha de Google del bar actual, pasadas por el usuario en capturas el 16/11 y copiadas literalmente (con sus erratas) en `RESENAS`. Las fechas relativas («hace un mes») se pasaron a mes y año. Ojo: lo que hay en internet en agregadores son reseñas de la etapa anterior del local (café cultural, desde 2014): no usar. Google Maps no deja leer las del bar nuevo desde fuera; las pasa el usuario.
   - `presentacion/la-web-explicada.md`: explicación de la web para el dueño, sin tecnicismos. Actualizarla si cambia la estructura.
   - Si `npm run dev` muestra `/admin` sin estilos, reiniciarlo (no registró las clases de la página nueva). La versión compilada está bien.
-- **Web completa:** portada + capítulos 1–5 + pie, y **/carta** (carta completa con precios, enlazada con el botón "Ver la carta completa" al terminar el capítulo 1). `npm run build` sin errores.
+- **Web completa:** portada + capítulos 1–5 + pie, y **/carta** (carta completa con precios, sin fotos, enlazada desde «Ver carta» en la portada y «Ver la carta completa» al terminar el capítulo 1). `npm run build` sin errores.
 - **Demo publicada:** https://yeiner99sd.github.io/la-salchicheria-demo/ (repo público Yeiner99SD/la-salchicheria-demo). Cada push a `main` despliega con GitHub Actions; la demo lleva `noindex` (`PUBLIC_DEMO=true`). Enlaces internos con `ruta()` de `src/lib/ruta.ts` (respeta el `base`).
 - **Salchi en SVG:** `marca/logo.svg` (copiado en `src/assets/marca/salchi.svg`) se incrusta con `Salchi.astro`: `parte="entero" | "cabeza" | "cola"` encuadra el MISMO trazado con el viewBox, sin redibujar. Color con `currentColor`. La barra (`SalchiRail.astro`) usa cabeza y cola. Favicon: `public/favicon.svg`.
 - Falta el **logotipo con texto** en vector ("la salchi chería"): solo existe en imagen (`fotos/igexport-DcqlX_qluNi.jpg` → `src/assets/fotos/cartel-logotipo.jpg`, sin usar todavía).

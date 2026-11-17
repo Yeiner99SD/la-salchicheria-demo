@@ -1,54 +1,20 @@
 ---
-import { Image } from 'astro:assets';
+/**
+ * Carta completa: solo productos y precios, por secciones (sin fotos).
+ * Se pinta con CARTA_INICIAL (src/data/carta.ts). Si desde /admin se guardó otra carta en este
+ * navegador, src/scripts/carta.ts la sustituye usando las plantillas de abajo.
+ */
 import Base from '../layouts/Base.astro';
 import Salchi from '../components/Salchi.astro';
 import AbiertoAhora from '../components/AbiertoAhora.astro';
 import Icono from '../components/Icono.astro';
 import Pie from '../components/Pie.astro';
-import { CARTA_COMPLETA, BEBIDAS, NEGOCIO } from '../data/negocio';
+import { NEGOCIO } from '../data/negocio';
+import { CARTA_INICIAL } from '../data/carta';
 import { ruta } from '../lib/ruta';
 
-import perritoQueso from '../assets/fotos/perrito-queso.jpg';
-import perritoCamiseta from '../assets/fotos/perrito-camiseta.jpg';
-import anillasRotulo from '../assets/fotos/anillas-rotulo.jpg';
-import anillasAlioli from '../assets/fotos/anillas-alioli.jpg';
-import cartelDePicar from '../assets/fotos/cartel-de-picar.jpg';
-import cartelCanitas from '../assets/fotos/cartel-canitas.jpg';
-
-type Foto = { src: ImageMetadata; alt: string; contener?: boolean };
-
-// Fotos reales que acompañan a cada sección (dos por sección, en tira)
-const FOTOS: Record<string, Foto[]> = {
-  perritos: [
-    {
-      src: perritoQueso,
-      alt: 'Perrito con salchicha, queso fundido, cebolla frita y patatas paja, en su caja de cartón sobre un plato de peltre.',
-    },
-    {
-      src: perritoCamiseta,
-      alt: 'Perrito estilo Salchi con cebolla encurtida rosa, sostenido delante de una camiseta blanca con el logotipo de La Salchichería.',
-    },
-  ],
-  pintxos: [
-    {
-      src: cartelDePicar,
-      alt: 'Ilustración de la marca: Salchi sujetando la carta, con el texto «De picar o de comer».',
-      contener: true,
-    },
-  ],
-  clasicos: [
-    {
-      src: anillasRotulo,
-      alt: 'Unas pinzas sirven anillas a la andaluza en un plato de peltre, con el rótulo «Anillas a la andaluza».',
-    },
-    {
-      src: anillasAlioli,
-      alt: 'Anillas a la andaluza levantadas con pinzas sobre un fondo de texto repetido: «tostado con alioli de ajo».',
-    },
-  ],
-};
-
-const indice = [...CARTA_COMPLETA.map((s) => ({ id: s.id, titulo: s.titulo })), { id: 'beber', titulo: 'Para beber' }];
+const claseEnlace =
+  'inline-flex min-h-10 items-center rounded-full border-2 border-rojo px-4 font-titular text-xs uppercase hover:bg-rojo hover:text-blanco';
 ---
 
 <Base
@@ -75,95 +41,36 @@ const indice = [...CARTA_COMPLETA.map((s) => ({ id: s.id, titulo: s.titulo })), 
 
   <!-- Índice: se queda arriba al bajar -->
   <nav aria-label="Secciones de la carta" class="sticky top-0 z-40 border-b-2 border-rojo bg-blanco">
-    <ul class="mx-auto flex max-w-3xl gap-2 overflow-x-auto px-4 py-3 sm:px-8 [scrollbar-width:none]">
-      {indice.map((s) => (
-        <li class="shrink-0">
-          <a href={`#${s.id}`} class="inline-flex min-h-10 items-center rounded-full border-2 border-rojo px-4 font-titular text-xs uppercase hover:bg-rojo hover:text-blanco">
-            {s.titulo}
-          </a>
-        </li>
+    <ul data-carta-indice class="mx-auto flex max-w-3xl gap-2 overflow-x-auto px-4 py-3 sm:px-8 [scrollbar-width:none]">
+      {CARTA_INICIAL.map((s) => (
+        <li class="shrink-0"><a href={`#${s.id}`} class={claseEnlace}>{s.titulo}</a></li>
       ))}
     </ul>
   </nav>
 
   <main id="contenido" class="mx-auto max-w-3xl px-4 pb-20 sm:px-8">
-    {CARTA_COMPLETA.map((s) => (
-      <section id={s.id} aria-labelledby={`${s.id}-titulo`} class="scroll-mt-20 pt-14">
-        <div class="flex flex-wrap items-baseline gap-x-4">
-          <h2 id={`${s.id}-titulo`} class="font-mano text-4xl uppercase sm:text-5xl">{s.titulo}</h2>
-          {s.nota && <p class="font-mono text-xs tracking-[0.2em] uppercase">({s.nota})</p>}
-        </div>
-
-        <ul class="mt-6 space-y-5">
-          {s.platos.map((p) => (
-            <li>
-              <div class="flex items-baseline gap-3">
-                <h3 class="font-titular text-base leading-tight uppercase sm:text-lg">{p.nombre}</h3>
-                <span class="relative top-[-0.25em] min-w-4 flex-1 border-b-2 border-dotted border-rojo" aria-hidden="true"></span>
-                <p class="shrink-0 font-bold">{p.precio}</p>
-              </div>
-              {p.desc && <p class="mt-1 max-w-[52ch] text-sm leading-snug">{p.desc}</p>}
-            </li>
-          ))}
-        </ul>
-
-        {FOTOS[s.id] && (
-          <div class:list={['mt-10 grid gap-4', FOTOS[s.id].length > 1 ? 'grid-cols-2' : 'grid-cols-1 sm:w-2/3']}>
-            {FOTOS[s.id].map((f, i) => (
-              <Image
-                src={f.src}
-                alt={f.alt}
-                widths={[240, 400, 640]}
-                sizes={FOTOS[s.id].length > 1 ? '(min-width: 768px) 360px, 45vw' : '(min-width: 768px) 480px, 92vw'}
-                class:list={[
-                  'w-full rounded-[1.5rem]',
-                  f.contener ? 'aspect-square bg-[#fbeee5] object-contain' : 'aspect-[4/5] object-cover',
-                  i % 2 ? 'rotate-[1.5deg]' : '-rotate-[1.5deg]',
-                ]}
-              />
-            ))}
+    <div data-carta-secciones>
+      {CARTA_INICIAL.map((s) => (
+        <section id={s.id} aria-labelledby={`${s.id}-titulo`} class="scroll-mt-20 pt-14">
+          <div class="flex flex-wrap items-baseline gap-x-4">
+            <h2 id={`${s.id}-titulo`} class="font-mano text-4xl uppercase sm:text-5xl">{s.titulo}</h2>
+            {s.nota && <p class="font-mono text-xs tracking-[0.2em] uppercase">({s.nota})</p>}
           </div>
-        )}
-      </section>
-    ))}
-
-    <!-- Bebidas -->
-    <section id="beber" aria-labelledby="beber-titulo" class="scroll-mt-20 pt-14">
-      <h2 id="beber-titulo" class="font-mano text-4xl uppercase sm:text-5xl">Para beber</h2>
-
-      <ul class="mt-6 space-y-5">
-        {[BEBIDAS.cana, BEBIDAS.sangria].map((b) => (
-          <li class="flex items-baseline gap-3">
-            <h3 class="font-titular text-base uppercase sm:text-lg">{b.nombre}</h3>
-            <span class="relative top-[-0.25em] min-w-4 flex-1 border-b-2 border-dotted border-rojo" aria-hidden="true"></span>
-            <p class="shrink-0 font-bold">{b.precio}</p>
-          </li>
-        ))}
-      </ul>
-
-      <h3 class="mt-10 font-mono text-xs font-bold tracking-[0.2em] uppercase">Blancos · precio por botella</h3>
-      <ul class="mt-4 space-y-5">
-        {BEBIDAS.vinos.map((v) => (
-          <li>
-            <div class="flex items-baseline gap-3">
-              <h4 class="font-titular text-base uppercase sm:text-lg">{v.nombre}</h4>
-              <span class="relative top-[-0.25em] min-w-4 flex-1 border-b-2 border-dotted border-rojo" aria-hidden="true"></span>
-              <p class="shrink-0 font-bold">{v.precio}</p>
-            </div>
-            <p class="mt-1 max-w-[52ch] text-sm leading-snug">{v.desc}</p>
-          </li>
-        ))}
-      </ul>
-      <p class="mt-4 text-xs">{BEBIDAS.vinosPendientes}</p>
-
-      <Image
-        src={cartelCanitas}
-        alt="Ilustración de la marca: Salchi con una caña en la mano y el texto «Cañitas muy bien tiradas»."
-        widths={[240, 400, 640]}
-        sizes="(min-width: 768px) 480px, 92vw"
-        class="mt-10 aspect-square w-full rounded-[1.5rem] bg-[#fbeee5] object-contain -rotate-[1.5deg] sm:w-2/3"
-      />
-    </section>
+          <ul class="mt-6 space-y-5">
+            {s.platos.map((p) => (
+              <li>
+                <div class="flex items-baseline gap-3">
+                  <h3 class="font-titular text-base leading-tight uppercase sm:text-lg">{p.nombre}</h3>
+                  {p.precio && <span class="relative top-[-0.25em] min-w-4 flex-1 border-b-2 border-dotted border-rojo" aria-hidden="true"></span>}
+                  {p.precio && <p class="shrink-0 font-bold">{p.precio}</p>}
+                </div>
+                {p.desc && <p class="mt-1 max-w-[52ch] text-sm leading-snug">{p.desc}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
 
     <!-- Cierre: sin reservas -->
     <section aria-labelledby="cierre-titulo" class="mt-20 rounded-[2rem] bg-rojo px-6 py-10 text-center text-blanco sm:px-10">
@@ -181,5 +88,31 @@ const indice = [...CARTA_COMPLETA.map((s) => ({ id: s.id, titulo: s.titulo })), 
     <p class="mt-8 text-center text-xs">Si tienes alguna alergia, pregúntanos: te contamos qué lleva cada plato.</p>
   </main>
 
+  <!-- Plantillas para la carta guardada desde /admin (mismo marcado que arriba) -->
+  <template data-plantilla-enlace><li class="shrink-0"><a class={claseEnlace}></a></li></template>
+  <template data-plantilla-seccion>
+    <section class="scroll-mt-20 pt-14">
+      <div class="flex flex-wrap items-baseline gap-x-4">
+        <h2 class="font-mano text-4xl uppercase sm:text-5xl"></h2>
+        <p data-nota class="font-mono text-xs tracking-[0.2em] uppercase"></p>
+      </div>
+      <ul class="mt-6 space-y-5"></ul>
+    </section>
+  </template>
+  <template data-plantilla-plato>
+    <li>
+      <div class="flex items-baseline gap-3">
+        <h3 class="font-titular text-base leading-tight uppercase sm:text-lg"></h3>
+        <span data-guia class="relative top-[-0.25em] min-w-4 flex-1 border-b-2 border-dotted border-rojo" aria-hidden="true"></span>
+        <p data-precio class="shrink-0 font-bold"></p>
+      </div>
+      <p data-desc class="mt-1 max-w-[52ch] text-sm leading-snug"></p>
+    </li>
+  </template>
+
   <Pie />
 </Base>
+
+<script>
+  import '../scripts/carta';
+</script>

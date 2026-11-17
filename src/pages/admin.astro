@@ -1,28 +1,28 @@
 ---
 /**
- * PANEL DE PRUEBA (demo): el bar elige qué productos salen en «Como Dios manda».
+ * PANEL DE PRUEBA (demo), en dos partes:
+ *   1. Destacados: qué productos salen en «Como Dios manda» (portada).
+ *   2. Carta completa: secciones, platos, descripciones y precios de /carta (src/scripts/admin-carta.ts).
  *
- * ⚠️ Sin autenticación y sin servidor: la lista se guarda en ESTE navegador (localStorage) y la portada
- *    la lee de ahí. Sirve para enseñar cómo funcionaría; no es un panel real.
+ * ⚠️ Sin autenticación y sin servidor: todo se guarda en ESTE navegador (localStorage) y la web
+ *    lo lee de ahí. Sirve para enseñar cómo funcionaría; no es un panel real.
  *    Para producción hacen falta: acceso con contraseña, guardar en un servidor y subida de fotos.
  *    No está enlazado desde ninguna página y lleva noindex.
  */
 import Base from '../layouts/Base.astro';
 import Icono from '../components/Icono.astro';
 import Salchi from '../components/Salchi.astro';
-import { CARTA_COMPLETA } from '../data/negocio';
 import { ETIQUETAS, MAX_DESTACADOS } from '../data/destacados';
+import { MAX_PLATOS, MAX_SECCIONES } from '../data/carta';
 import { bibliotecaFotos } from '../data/fotos-destacados';
 import { ruta } from '../lib/ruta';
 
 const fotos = await bibliotecaFotos();
-// Platos de la carta para añadir con un toque (sin los marcadores pendientes)
-const carta = CARTA_COMPLETA.flatMap((s) => s.platos)
-  .filter((p) => !p.nombre.startsWith('['))
-  .map((p) => ({ nombre: p.nombre, desc: p.desc?.startsWith('[') ? '' : (p.desc ?? ''), precio: p.precio, seccion: p.seccion }));
+const claseSalto =
+  'inline-flex min-h-10 items-center rounded-full border-2 border-rojo px-4 font-titular text-xs uppercase hover:bg-rojo hover:text-blanco';
 ---
 
-<Base noindex title="Panel de prueba | La Salchichería · Oeste 7" description="Panel de prueba para elegir los destacados de la portada.">
+<Base noindex title="Panel de prueba | La Salchichería · Oeste 7" description="Panel de prueba para elegir los destacados de la portada y editar la carta.">
   <p class="bg-peltre px-4 py-2.5 text-center font-titular text-xs tracking-wide text-blanco uppercase sm:text-sm">
     Panel de prueba · sin contraseña · los cambios se guardan solo en este navegador
   </p>
@@ -42,8 +42,17 @@ const carta = CARTA_COMPLETA.flatMap((s) => s.platos)
     </div>
   </header>
 
+  <!-- Saltar entre las dos partes del panel -->
+  <nav aria-label="Partes del panel" class="sticky top-0 z-40 border-b-2 border-rojo bg-blanco">
+    <ul class="mx-auto flex max-w-3xl gap-2 overflow-x-auto px-4 py-3 sm:px-8">
+      <li class="shrink-0"><a href="#destacados" class={claseSalto}>Destacados</a></li>
+      <li class="shrink-0"><a href="#carta" class={claseSalto}>Carta completa</a></li>
+    </ul>
+  </nav>
+
   <main id="contenido" class="mx-auto max-w-3xl px-4 pt-10 pb-24 sm:px-8">
-    <h2 class="font-titular text-[clamp(1.6rem,7vw,2.75rem)] leading-none uppercase">Destacados de «Como Dios manda»</h2>
+    <section id="destacados" aria-labelledby="destacados-titulo" class="scroll-mt-20">
+    <h2 id="destacados-titulo" class="font-titular text-[clamp(1.6rem,7vw,2.75rem)] leading-none uppercase">Destacados de «Como Dios manda»</h2>
     <p class="mt-3 max-w-prose text-sm leading-relaxed sm:text-base">
       Elige qué productos salen en la portada, en qué orden y con qué etiqueta (Top, Promo o Nuevo).
       Cada cambio se guarda solo. Máximo {MAX_DESTACADOS}.
@@ -55,9 +64,9 @@ const carta = CARTA_COMPLETA.flatMap((s) => s.platos)
       <div class="mt-3 flex flex-wrap items-end gap-3">
         <label class="campo min-w-0 flex-1 basis-56">
           <span>De la carta</span>
+          <!-- Se rellena en el navegador con la carta editada (o la de partida) -->
           <select data-nuevo-carta>
             <option value="">Elige un plato…</option>
-            {carta.map((p, i) => <option value={i}>{p.seccion} · {p.nombre}</option>)}
           </select>
         </label>
         <button type="button" data-accion="anadir-carta" class="btn bg-rojo text-blanco">Añadir</button>
@@ -73,8 +82,30 @@ const carta = CARTA_COMPLETA.flatMap((s) => s.platos)
       <a href={ruta('#comer')} class="btn bg-rojo text-blanco">Ver cómo queda en la web <Icono nombre="flecha" /></a>
       <button type="button" data-accion="restaurar" class="btn border-2 border-rojo text-rojo">Restaurar la lista de partida</button>
     </div>
+    </section>
 
-    <p class="mt-8 max-w-prose text-xs leading-relaxed">
+    <!-- 2 · Carta completa (lo gestiona src/scripts/admin-carta.ts) -->
+    <section id="carta" aria-labelledby="carta-titulo" class="mt-20 scroll-mt-20 border-t-4 border-rojo pt-10">
+      <h2 id="carta-titulo" class="font-titular text-[clamp(1.6rem,7vw,2.75rem)] leading-none uppercase">Carta completa</h2>
+      <p class="mt-3 max-w-prose text-sm leading-relaxed sm:text-base">
+        Secciones, platos, descripciones y precios de la página de la carta. Pulsa una sección para abrirla.
+        Cada cambio se guarda solo. Un plato sin precio sale sin precio; uno sin nombre no sale.
+        Máximo {MAX_SECCIONES} secciones y {MAX_PLATOS} platos por sección.
+      </p>
+
+      <p data-carta-estado role="status" aria-live="polite" class="mt-6 min-h-6 text-sm font-bold"></p>
+
+      <div data-carta-lista class="mt-2 space-y-4"></div>
+
+      <button type="button" data-carta-accion="anadir-seccion" class="btn mt-6 border-2 border-rojo text-rojo">Añadir sección</button>
+
+      <div class="mt-10 flex flex-wrap gap-3 border-t-2 border-dashed border-rojo pt-6">
+        <a href={ruta('carta/')} class="btn bg-rojo text-blanco">Ver la carta en la web <Icono nombre="flecha" /></a>
+        <button type="button" data-carta-accion="restaurar" class="btn border-2 border-rojo text-rojo">Restaurar la carta de partida</button>
+      </div>
+    </section>
+
+    <p class="mt-12 max-w-prose text-xs leading-relaxed">
       Esto es una demostración: los cambios solo se ven en el navegador donde se hacen. En la versión definitiva,
       el panel tendrá contraseña, los cambios se verán para todo el mundo y se podrán subir fotos nuevas.
     </p>
@@ -119,8 +150,44 @@ const carta = CARTA_COMPLETA.flatMap((s) => s.platos)
     </li>
   </template>
 
+  <!-- Plantillas de la carta: una sección (desplegable) y un plato -->
+  <template data-plantilla-seccion-carta>
+    <details data-seccion class="rounded-[1.5rem] border-2 border-rojo">
+      <summary class="flex min-h-14 cursor-pointer items-center gap-3 px-4 py-3 sm:px-5">
+        <span data-s-titulo class="min-w-0 flex-1 font-titular text-base uppercase sm:text-lg"></span>
+        <span data-s-cuenta class="shrink-0 text-xs"></span>
+      </summary>
+      <div class="border-t-2 border-dashed border-rojo px-4 pt-4 pb-5 sm:px-5">
+        <div class="grid gap-3 sm:grid-cols-2">
+          <label class="campo"><span>Nombre de la sección</span><input data-sc="titulo" type="text" maxlength="40" autocomplete="off" /></label>
+          <label class="campo"><span>Nota (opcional)</span><input data-sc="nota" type="text" maxlength="40" autocomplete="off" placeholder="Para compartir" /></label>
+        </div>
+        <ol data-platos class="mt-5 space-y-4"></ol>
+        <div class="mt-5 flex flex-wrap items-center gap-2">
+          <button type="button" data-carta-accion="anadir-plato" class="boton-fila mr-auto">Añadir plato</button>
+          <button type="button" data-carta-accion="subir-seccion" class="boton-fila">Subir sección</button>
+          <button type="button" data-carta-accion="bajar-seccion" class="boton-fila">Bajar sección</button>
+          <button type="button" data-carta-accion="quitar-seccion" class="boton-fila">Quitar sección</button>
+        </div>
+      </div>
+    </details>
+  </template>
+  <template data-plantilla-plato-carta>
+    <li data-plato class="rounded-xl bg-roto p-3 sm:p-4">
+      <div class="grid gap-3 sm:grid-cols-[1fr_9rem]">
+        <label class="campo"><span>Plato</span><input data-pc="nombre" type="text" maxlength="80" autocomplete="off" /></label>
+        <label class="campo"><span>Precio</span><input data-pc="precio" type="text" maxlength="24" autocomplete="off" placeholder="6 €" /></label>
+        <label class="campo sm:col-span-2"><span>Descripción (opcional)</span><textarea data-pc="desc" rows="2" maxlength="200"></textarea></label>
+      </div>
+      <div class="mt-3 flex flex-wrap justify-end gap-2">
+        <button type="button" data-carta-accion="subir-plato" class="boton-fila">Subir</button>
+        <button type="button" data-carta-accion="bajar-plato" class="boton-fila">Bajar</button>
+        <button type="button" data-carta-accion="quitar-plato" class="boton-fila">Quitar</button>
+      </div>
+    </li>
+  </template>
+
   <script type="application/json" data-fotos set:html={JSON.stringify(fotos)} />
-  <script type="application/json" data-carta set:html={JSON.stringify(carta)} />
 </Base>
 
 <style>
@@ -177,14 +244,33 @@ const carta = CARTA_COMPLETA.flatMap((s) => s.platos)
     leerDestacados,
     type Destacado,
   } from '../data/destacados';
+  import { CARTA_INICIAL, leerCarta, type PlatoCarta } from '../data/carta';
+  import '../scripts/admin-carta';
 
   type Foto = { nombre: string; miniatura: string };
-  type PlatoCarta = { nombre: string; desc: string; precio: string };
 
   const q = <T extends Element = HTMLElement>(s: string, raiz: ParentNode = document) => raiz.querySelector<T>(s)!;
   const fotos: Record<string, Foto> = JSON.parse(q('[data-fotos]').textContent || '{}');
-  const carta: PlatoCarta[] = JSON.parse(q('[data-carta]').textContent || '[]');
   const ol = q<HTMLOListElement>('[data-lista]');
+
+  // «Añadir de la carta»: sale de la carta editada en la parte 2 (o de la de partida), sin marcadores pendientes
+  let carta: PlatoCarta[] = [];
+  const limpio = (t: string) => (t.startsWith('[') ? '' : t);
+  function rellenarCarta() {
+    const sel = q<HTMLSelectElement>('[data-nuevo-carta]');
+    const opciones: HTMLOptionElement[] = [];
+    carta = [];
+    for (const s of leerCarta() ?? CARTA_INICIAL) {
+      for (const p of s.platos) {
+        if (!limpio(p.nombre)) continue;
+        opciones.push(new Option(`${s.titulo} · ${p.nombre}`, String(carta.length)));
+        carta.push({ nombre: p.nombre, desc: limpio(p.desc), precio: p.precio });
+      }
+    }
+    sel.replaceChildren(new Option('Elige un plato…', ''), ...opciones);
+  }
+  rellenarCarta();
+  document.addEventListener('carta-cambiada', rellenarCarta);
   const plantilla = q<HTMLTemplateElement>('[data-plantilla-fila]');
   const estado = q('[data-estado]');
 
