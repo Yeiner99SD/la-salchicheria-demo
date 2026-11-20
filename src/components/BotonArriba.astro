@@ -1,0 +1,93 @@
+---
+/**
+ * Botón flotante «Volver al inicio». Aparece tras bajar algo más de una pantalla y se oculta
+ * mientras haya en pantalla una zona marcada con data-sin-arriba (p. ej. el zoom de la carta,
+ * cuyas frases van abajo a la izquierda). Sin JavaScript no se muestra: el enlace sigue en el HTML.
+ * En la portada, Lenis (anchors: true) hace el desplazamiento suave; en las demás páginas, el CSS.
+ */
+import Icono from './Icono.astro';
+
+interface Props {
+  /** id del elemento al que volver (sin #) */
+  destino: string;
+}
+const { destino } = Astro.props;
+---
+
+<a href={`#${destino}`} data-boton-arriba class="boton-arriba" aria-label="Volver al inicio">
+  <Icono nombre="abajo" class="inline-block size-5 rotate-180" />
+</a>
+
+<style>
+  .boton-arriba {
+    position: fixed;
+    z-index: 45;
+    left: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 2.5px solid var(--color-rojo);
+    border-radius: 999px;
+    background: var(--color-blanco);
+    color: var(--color-rojo);
+    box-shadow: 3px 3px 0 var(--color-rojo-oscuro);
+    /* oculto hasta que el script lo muestre */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease,
+      visibility 0s linear 0.25s;
+  }
+  .boton-arriba[data-visible] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+  .boton-arriba:hover {
+    background: var(--color-rojo);
+    color: var(--color-blanco);
+  }
+  @media (min-width: 768px) {
+    .boton-arriba {
+      left: 1.25rem;
+      bottom: 1.25rem;
+    }
+  }
+</style>
+
+<script>
+  const boton = document.querySelector<HTMLElement>('[data-boton-arriba]');
+  if (boton) {
+    const tapando = new Set<Element>();
+    let pasadoLaPortada = false;
+    const pintar = () => boton.toggleAttribute('data-visible', pasadoLaPortada && tapando.size === 0);
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entradas) => {
+        entradas.forEach((e) => (e.isIntersecting ? tapando.add(e.target) : tapando.delete(e.target)));
+        pintar();
+      });
+      document.querySelectorAll('[data-sin-arriba]').forEach((z) => io.observe(z));
+    }
+
+    let pendiente = false;
+    const alHacerScroll = () => {
+      if (pendiente) return;
+      pendiente = true;
+      requestAnimationFrame(() => {
+        pendiente = false;
+        pasadoLaPortada = window.scrollY > window.innerHeight * 1.2;
+        pintar();
+      });
+    };
+    addEventListener('scroll', alHacerScroll, { passive: true });
+    alHacerScroll();
+  }
+</script>

@@ -138,3 +138,11 @@ html.motion .galeria {
     transform: translateY(4px);
   }
 }
+
+/* Desplazamiento suave al pulsar enlaces internos (p. ej. «Volver al inicio») en las páginas sin Lenis.
+   En la portada lo hace Lenis, que añade la clase .lenis a <html>. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
+}

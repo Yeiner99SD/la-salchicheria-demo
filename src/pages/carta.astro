@@ -9,6 +9,7 @@ import Salchi from '../components/Salchi.astro';
 import AbiertoAhora from '../components/AbiertoAhora.astro';
 import Icono from '../components/Icono.astro';
 import Pie from '../components/Pie.astro';
+import BotonArriba from '../components/BotonArriba.astro';
 import { NEGOCIO } from '../data/negocio';
 import { CARTA_INICIAL } from '../data/carta';
 import { ruta } from '../lib/ruta';
@@ -21,7 +22,9 @@ const claseEnlace =
   title="La carta | La Salchichería · Oeste 7 (Salamanca)"
   description="La carta completa de La Salchichería: perritos, pintxos, clásicos para compartir, huerta, cañas y vinos, con precios. Plaza del Oeste, 7 · Salamanca."
 >
-  <header class="bg-rojo text-blanco">
+  <BotonArriba destino="inicio" />
+
+  <header id="inicio" class="bg-rojo text-blanco">
     <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 pt-4 text-[11px] uppercase tracking-[0.18em] sm:px-8 sm:text-xs">
       <a href={ruta()} class="inline-flex min-h-11 items-center gap-2 font-bold underline-offset-4 hover:underline">
         <Icono nombre="flecha" class="inline-block size-[1.1em] rotate-180" /> Volver al bar
