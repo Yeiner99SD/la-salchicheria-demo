@@ -19,7 +19,7 @@ Los colores, las letras y el tono son los de vuestro Instagram: rojo y blanco, f
 - Dos botones: **Ver carta**, que es el principal, y **Cómo llegar**, que abre Google Maps con la ruta.
 
 ### Capítulo 1 · Comer bien
-- La foto de vuestra carta, que se va acercando sola mientras se baja.
+- Vuestra carta, que se recorre sección a sección mientras se baja: se acerca a los pintxos, la huerta, los clásicos, los perritos, los molletes, las carnes y los postres, cada uno con su frase («Pintxos. Para ir abriendo boca.», «Postres. Siempre queda un hueco.»…).
 - **«Como Dios manda»**: una fila de platos destacados que elegís vosotros (ver más abajo «Lo que podéis cambiar vosotros»).
 - Un botón a la **carta completa**.
 
@@ -92,9 +92,9 @@ Algunos datos aparecen entre corchetes, como `[PRECIO]` o `[TELÉFONO]`, y hay r
 
 | Qué falta | Dónde se ve |
 |---|---|
-| Precio de los perritos, la caña y la sangría | Capítulos 1 y 2, y carta |
-| La carta de perritos completa | Carta |
-| El resto de vinos (en la foto de la carta no se leen todos) | Capítulo 2 y carta |
+| Precio de la caña y la sangría (la carta nueva no trae bebidas) | Capítulo 2 y carta |
+| La carta de vinos completa (ahora solo salen dos blancos, de la carta antigua) | Capítulo 2 y carta |
+| Los alérgenos de cada plato en la página de la carta (están en la carta impresa, falta pasarlos) | Carta |
 | Teléfono | Ticket final y pie |
 | Fotos de la fachada, la barra y la terraza | Capítulo 3 |
 | Fotos de croquetas, bravas, huevos rotos y demás platos | «Como Dios manda» |

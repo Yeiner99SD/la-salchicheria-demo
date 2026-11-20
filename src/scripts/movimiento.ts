@@ -147,25 +147,52 @@ if (!reducido) {
   });
 
   tareas.push(() => {
-    /* 1 · Carta fijada que hace zoom y se pasea */
+    /* 1 · Carta fijada: la cámara recorre la carta sección a sección, cada una con su frase.
+       Las paradas y sus cajas vienen de ComerBien.astro (data-caja en cada frase). */
     const zoom = $('[data-zoom]');
-    if (zoom) {
+    const img = $('[data-zoom-img]');
+    if (zoom && img) {
       const textos = $$('[data-zoom-texto]');
+      const cajas = textos.map((t) => (t.dataset.caja ? t.dataset.caja.split(',').map(Number) : null));
       gsap.set(textos.slice(1), { autoAlpha: 0, y: 30 });
-      gsap
-        .timeline({
-          defaults: { ease: 'power2.inOut' },
-          scrollTrigger: { trigger: zoom, start: 'top top', end: '+=200%', pin: true, scrub: 0.8 },
-        })
-        .set('[data-zoom-img]', { transformOrigin: '50% 50%' })
-        .to('[data-zoom-img]', { scale: 2.6, transformOrigin: '19% 43%', duration: 1 }) // Salchi con el bocadillo
-        .to(textos[0], { autoAlpha: 0, y: -30, duration: 0.3 }, '<0.2')
-        .to(textos[1], { autoAlpha: 1, y: 0, duration: 0.3 }, '<0.2')
-        .to({}, { duration: 0.3 })
-        .to('[data-zoom-img]', { scale: 2.2, transformOrigin: '46% 27%', duration: 1 }) // LOS CLÁSICOS
-        .to(textos[1], { autoAlpha: 0, y: -30, duration: 0.3 }, '<0.2')
-        .to(textos[2], { autoAlpha: 1, y: 0, duration: 0.3 }, '<0.2')
-        .to({}, { duration: 0.4 });
+      gsap.set(img, { transformOrigin: '0 0' });
+
+      // Encuadre de una sección: escala para que quepa (ancho y alto) y desplazamiento para centrarla.
+      // Se calcula con las medidas del momento (funciones + invalidateOnRefresh), así se adapta al girar el móvil.
+      const encuadre = (caja: number[] | null) => {
+        if (!caja) return { scale: 1, x: 0, y: 0 };
+        const [x0, y0, x1, y1] = caja;
+        const W = img.offsetWidth;
+        const H = img.offsetHeight;
+        const ancho = zoom.clientWidth - (zoom.clientWidth < 768 ? 64 : 110); // hueco para Salchi a la derecha
+        const alto = zoom.clientHeight;
+        const s = Math.min((0.94 * ancho) / ((x1 - x0) * W), (0.66 * alto) / ((y1 - y0) * H), 3.4);
+        // el centro de la sección va al centro del hueco libre, un poco por encima de la mitad (abajo va la frase)
+        return {
+          scale: s,
+          x: ancho / 2 - img.offsetLeft - s * ((x0 + x1) / 2) * W,
+          y: alto * 0.43 - img.offsetTop - s * ((y0 + y1) / 2) * H,
+        };
+      };
+
+      const tl = gsap.timeline({
+        defaults: { ease: 'power2.inOut' },
+        scrollTrigger: {
+          trigger: zoom,
+          start: 'top top',
+          end: () => `+=${(textos.length - 1) * 70}%`,
+          pin: true,
+          scrub: 0.8,
+          invalidateOnRefresh: true,
+        },
+      });
+      for (let i = 1; i < textos.length; i++) {
+        const e = () => encuadre(cajas[i]);
+        tl.to(img, { scale: () => e().scale, x: () => e().x, y: () => e().y, duration: 1 })
+          .to(textos[i - 1], { autoAlpha: 0, y: -30, duration: 0.3 }, '<0.2')
+          .to(textos[i], { autoAlpha: 1, y: 0, duration: 0.3 }, '<0.2')
+          .to({}, { duration: 0.45 }); // pausa para leer la sección
+      }
     }
 
   });

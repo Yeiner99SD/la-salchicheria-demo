@@ -16,7 +16,11 @@ export const NEGOCIO = {
     encodeURIComponent('La Salchichería, Plaza del Oeste 7, 37007 Salamanca'),
 } as const;
 
-/** Carta completa, transcrita de la foto de la carta (fotos/carta.jpg). Precios en euros. */
+/**
+ * Carta completa, transcrita de la carta nueva (fotos/carta_600ppp.png, recibida el 20/11/2026).
+ * Mismo orden de secciones que la carta impresa. Precios en euros, con coma decimal.
+ * Los alérgenos de la carta impresa no están transcritos todavía.
+ */
 export type Plato = { nombre: string; desc?: string; precio: string; seccion: string };
 export type Seccion = { id: string; titulo: string; nota?: string; platos: Plato[] };
 
@@ -28,46 +32,46 @@ const seccion = (id: string, titulo: string, platos: Omit<Plato, 'seccion'>[], n
 });
 
 export const CARTA_COMPLETA: Seccion[] = [
-  seccion('perritos', 'Perritos', [
-    { nombre: 'Perrito estilo Salchi', desc: '[Descripción pendiente]', precio: '[PRECIO]' },
-    { nombre: '[Resto de perritos]', desc: '[Carta de perritos pendiente de recibir]', precio: '[PRECIO]' },
-  ], 'La razón del nombre'),
   seccion('pintxos', 'Pintxos', [
     { nombre: 'Gilda', precio: '2 €' },
     { nombre: 'Tortilla de patata', desc: 'Melosa y con cebolla caramelizada.', precio: '3 €' },
-    { nombre: 'Jeta', precio: '2,50 €' },
+    { nombre: 'Jeta', precio: '3 €' },
     { nombre: 'Croqueta de jamón ibérico Belisario Barriga', desc: 'Elaborada con leche infusionada con hueso de jamón.', precio: '1,50 €/ud.' },
+  ]),
+  seccion('huerta', 'Huerta', [
+    { nombre: 'Carpaccio de tomate, miniburrata y pesto', precio: '7,50 €' },
+    { nombre: 'Berenjena asada', desc: 'Con miel de caña y un toque fresco de yogur.', precio: '7 €' },
   ]),
   seccion('clasicos', 'Los clásicos', [
     { nombre: 'Bravas', desc: 'Con nuestra salsa clásica y alioli de ajo tostado.', precio: '6 €' },
     { nombre: 'Ensaladilla', desc: 'A nuestra manera, con langostino cocido y piparra.', precio: '6 €' },
     { nombre: 'Huevos rotos con paleta ibérica', desc: 'Patatas en bastón, huevos fritos con puntilla y paleta ibérica de Belisario Barriga.', precio: '8,50 €' },
-    { nombre: 'Jeta', precio: '6 €' },
-    { nombre: 'Anillas a la andaluza', desc: 'Con alioli de ajo tostado.', precio: '7,20 €' },
+    { nombre: 'Jeta', precio: '7,50 €' },
+    { nombre: 'Anillas a la andaluza', desc: 'Con alioli de ajo tostado.', precio: '8,50 €' },
     { nombre: 'Lágrimas de pollo', desc: 'Tiras de pechuga marinadas y fritas.', precio: '7,20 €' },
-    { nombre: 'Fish & chips', desc: 'Merluza rebozada, patatas fritas y salsa tártara.', precio: '12,50 €' },
-    { nombre: 'Alitas', desc: 'Cocinadas a baja temperatura y glaseadas con nuestra BBQ coreana.', precio: '7,50 €' },
-    { nombre: 'Costillas de cerdo', desc: 'Glaseadas con nuestra BBQ Bourbon.', precio: '9,50 €' },
-  ], 'Para compartir'),
-  seccion('huerta', 'Huerta', [
-    { nombre: 'Carpaccio de tomate, miniburrata y pesto', precio: '7,50 €' },
-    { nombre: 'Berenjena asada', desc: 'Con miel de caña y un toque fresco de yogur.', precio: '7 €' },
-    { nombre: 'Pimientos de Padrón', precio: '6 €' },
+  ]),
+  seccion('perritos', 'Burger · Perritos · Brioche', [
+    { nombre: 'Burger cheese bacon', desc: 'Pan brioche, carne 100 % ternera madurada, queso Gouda, pepinillo, salsa Emmy y mermelada de bacon.', precio: '11 €' },
+    { nombre: 'Perrito estilo Salchi', desc: 'Pan brioche, salchicha bratwurst, bacon, queso rallado, salsa Emmy y cebolla roja encurtida.', precio: '7,50 €' },
+    { nombre: 'Perrito estilo NY', desc: 'Pan brioche, salchicha, mermelada de bacon, cebolla frita, patata paja, ketchup y mostaza.', precio: '7,50 €' },
+    { nombre: 'Brioche de cochinita pibil', desc: 'Pan brioche, cochinita pibil y cebolla encurtida.', precio: '8 €' },
+    { nombre: 'Suplemento de patatas', precio: '1,50 €' },
+  ]),
+  seccion('molletes', 'Molletes', [
+    { nombre: 'Mollete de ternera', desc: 'Pan de cristal, ternera, aceite de ajo y perejil.', precio: '6,50 €' },
+    { nombre: 'Mollete de calamares', desc: 'Pan de cristal, anillas a la andaluza y alioli de ajo tostado.', precio: '6,50 €' },
+    { nombre: 'Mollete de jamón Belisario Barriga', desc: 'Pan de cristal, emulsión de tomate y jamón ibérico.', precio: '6,50 €' },
+    { nombre: 'Piripi sevillano', desc: 'Pan de cristal, lomo fresco, bacon, Gouda, tomate en rodajas y alioli.', precio: '6,50 €' },
+  ]),
+  seccion('carnes', 'Carnes', [
+    { nombre: 'Costillas Bourbon BBQ', desc: 'Horneadas a fuego lento durante 3 horas con salsa bourbon BBQ.', precio: '9,90 €' },
+    { nombre: 'Entrecot del Oeste', desc: 'Lomo alto con nuestra salsa pepper secreta, acompañado de patatas caseras.', precio: '17,90 €' },
+  ]),
+  seccion('postres', 'Postres', [
+    { nombre: 'Tarta de queso', precio: '5 €' },
+    { nombre: 'Coulant de chocolate', precio: '5 €' },
   ]),
 ];
-
-const buscar = (nombre: string) => CARTA_COMPLETA.flatMap((s) => s.platos).find((p) => p.nombre.startsWith(nombre))!;
-
-/** Selección para la galería del capítulo 1 (el resto, en /carta) */
-export const CARTA: Plato[] = [
-  'Anillas a la andaluza',
-  'Croqueta de jamón ibérico',
-  'Bravas',
-  'Huevos rotos',
-  'Gilda',
-  'Alitas',
-  'Costillas de cerdo',
-].map(buscar);
 
 /** Bebidas. Vinos: solo los legibles en la foto de la carta (precio por botella). */
 export const BEBIDAS = {

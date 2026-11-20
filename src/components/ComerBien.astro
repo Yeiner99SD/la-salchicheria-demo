@@ -1,6 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
-import carta from '../assets/fotos/carta.jpg';
+import carta from '../assets/fotos/carta-2026.jpg';
 import { DESTACADOS_INICIALES } from '../data/destacados';
 import { bibliotecaFotos } from '../data/fotos-destacados';
 import { ruta } from '../lib/ruta';
@@ -14,10 +14,23 @@ import Icono from './Icono.astro';
 const fotos = await bibliotecaFotos();
 const destacados = DESTACADOS_INICIALES.filter((d) => d.visible);
 
-const textosZoom = [
-  'La carta, en una hoja. Sin rodeos.',
-  'Hasta Salchi tiene hambre.',
-  'Los clásicos. Para compartir (o no).',
+/**
+ * Recorrido con zoom por la carta (fotos/carta_600ppp.png → src/assets/fotos/carta-2026.jpg).
+ * Una parada por sección, cada una con su frase. `caja` = [izquierda, arriba, derecha, abajo] de la
+ * sección, en fracciones de la imagen (0 a 1). Sin caja = la carta entera.
+ * Si cambia la maquetación de la carta, solo hay que retocar estas cajas.
+ */
+type Parada = { texto: string; caja?: [number, number, number, number] };
+const paradas: Parada[] = [
+  { texto: 'La carta, en una hoja. Sin rodeos.' },
+  { texto: 'Pintxos. Para ir abriendo boca.', caja: [0.045, 0.03, 0.47, 0.275] },
+  { texto: 'Huerta. Algo verde, que luego dicen.', caja: [0.045, 0.28, 0.45, 0.41] },
+  { texto: 'Los clásicos. Para compartir (o no).', caja: [0.045, 0.415, 0.48, 0.79] },
+  { texto: 'Perritos y brioche. La razón del nombre.', caja: [0.515, 0.03, 0.955, 0.37] },
+  { texto: 'Molletes. Pan de cristal, que cruje.', caja: [0.515, 0.375, 0.955, 0.67] },
+  { texto: 'Carnes. Tres horas al fuego, que se nota.', caja: [0.515, 0.675, 0.955, 0.81] },
+  { texto: 'Postres. Siempre queda un hueco.', caja: [0.515, 0.815, 0.955, 0.935] },
+  { texto: 'Ahora elige. O pide de todo.' },
 ];
 ---
 
@@ -27,32 +40,38 @@ const textosZoom = [
     numero={1}
     id="comer-titulo"
     titulo={['Comer', 'bien']}
-    sub="Pintxos, clásicos para compartir y algo de huerta. Para que luego no digan."
+    sub="Pintxos, clásicos, perritos, molletes, carnes y postres. Para que luego no digan."
   />
 
-  <!-- 2 · Foto protagonista fijada con zoom.
-       Ahora es la carta (la única foto de producto en alta). Cuando lleguen las de perritos, valorar cambiarla. -->
+  <!-- 2 · La carta fijada: al hacer scroll, la cámara se acerca a cada sección (src/scripts/movimiento.ts) -->
   <div data-zoom class="relative flex min-h-svh flex-col items-center justify-center overflow-hidden py-6">
     <div
       data-zoom-img
       class="relative"
-      style="aspect-ratio: 3273 / 4096; height: min(82vh, calc(88vw * 1.2514)); height: min(82svh, calc(88vw * 1.2514));"
+      style="aspect-ratio: 2600 / 3679; height: min(82vh, calc(88vw * 1.415)); height: min(82svh, calc(88vw * 1.415));"
     >
       <Picture
         src={carta}
         formats={['avif', 'webp']}
-        widths={[480, 800, 1200, 1800]}
-        sizes="(min-width: 768px) 130svh, 176vw"
-        alt="La carta de La Salchichería en hojas con anilla: pintxos, los clásicos para compartir, huerta y vinos blancos, impresa en rojo y con Salchi sujetando un bocadillo."
+        fallbackFormat="webp"
+        widths={[700, 1100, 1600, 2200]}
+        quality={55}
+        sizes="(min-width: 768px) 1500px, 250vw"
+        alt="La carta de La Salchichería: pintxos, huerta, los clásicos, burger, perritos y brioche, molletes, carnes y postres, con sus precios y alérgenos."
         class="h-full w-full"
         pictureAttributes={{ class: 'block h-full w-full' }}
       />
     </div>
 
     <ol class="zoom-textos con-rail mt-6 w-full px-4 sm:px-8">
-      {textosZoom.map((t, i) => (
-        <li data-zoom-texto class="w-fit bg-rojo px-3 py-2 font-titular text-base text-blanco uppercase shadow-[4px_4px_0_var(--color-peltre)] sm:text-xl" style={`rotate: ${i % 2 ? 1.5 : -1.5}deg`}>
-          {t}
+      {paradas.map((p, i) => (
+        <li
+          data-zoom-texto
+          data-caja={p.caja?.join(',')}
+          class="w-fit bg-rojo px-3 py-2 font-titular text-base text-blanco uppercase shadow-[4px_4px_0_var(--color-peltre)] sm:text-xl"
+          style={`rotate: ${i % 2 ? 1.5 : -1.5}deg`}
+        >
+          {p.texto}
         </li>
       ))}
     </ol>
@@ -111,5 +130,9 @@ const textosZoom = [
   }
   :global(html.motion) .zoom-textos > li {
     grid-area: 1 / 1;
+  }
+  /* Sin movimiento no hay recorrido por secciones: basta con la primera frase */
+  :global(html:not(.motion)) .zoom-textos > li:not(:first-child) {
+    display: none;
   }
 </style>

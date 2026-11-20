@@ -28,8 +28,8 @@ export const MAX_DESTACADOS = 12;
 
 /** Lista de partida. Nombres, descripciones y precios salen de la carta; la etiqueta «Top» es de muestra. */
 export const DESTACADOS_INICIALES: Destacado[] = [
-  { id: 'perrito-salchi', nombre: 'Perrito estilo Salchi', desc: 'La razón del nombre. Empieza por aquí.', precio: '[PRECIO]', etiqueta: 'Top', foto: 'perrito-estilo-salchi', visible: true },
-  { id: 'anillas', nombre: 'Anillas a la andaluza', desc: 'Con alioli de ajo tostado.', precio: '7,20 €', etiqueta: '', foto: 'anillas-camiseta', visible: true },
+  { id: 'perrito-salchi', nombre: 'Perrito estilo Salchi', desc: 'Pan brioche, salchicha bratwurst, bacon, queso rallado, salsa Emmy y cebolla roja encurtida.', precio: '7,50 €', etiqueta: 'Top', foto: 'perrito-estilo-salchi', visible: true },
+  { id: 'anillas', nombre: 'Anillas a la andaluza', desc: 'Con alioli de ajo tostado.', precio: '8,50 €', etiqueta: '', foto: 'anillas-camiseta', visible: true },
   { id: 'croqueta', nombre: 'Croqueta de jamón ibérico Belisario Barriga', desc: 'Elaborada con leche infusionada con hueso de jamón.', precio: '1,50 €/ud.', etiqueta: '', foto: '', visible: true },
   { id: 'bravas', nombre: 'Bravas', desc: 'Con nuestra salsa clásica y alioli de ajo tostado.', precio: '6 €', etiqueta: '', foto: '', visible: true },
   { id: 'huevos-rotos', nombre: 'Huevos rotos con paleta ibérica', desc: 'Patatas en bastón, huevos fritos con puntilla y paleta ibérica de Belisario Barriga.', precio: '8,50 €', etiqueta: '', foto: '', visible: true },

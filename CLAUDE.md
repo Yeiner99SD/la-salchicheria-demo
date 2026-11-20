@@ -46,7 +46,7 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 - Horario: Lunes a jueves 12:00–16:00 y 19:00–23:30 · Viernes a domingo 12:00–23:30
 - **No hacen reservas.** El CTA principal NO es "Reservar".
 - Instagram: https://www.instagram.com/lasalchicheria7/
-- Carta con precios: sacada de `fotos/carta.jpg` → `src/data/negocio.ts`. Faltan teléfono y precios de perritos (marcadores `[TELÉFONO]`, `[PRECIO]`).
+- Carta con precios: la **carta nueva** `fotos/carta_600ppp.png` (20/11/2026) → `CARTA_COMPLETA` en `src/data/negocio.ts`. Ya trae precios de perritos. Faltan el teléfono y los precios de caña y sangría (marcadores `[TELÉFONO]`, `[PRECIO]`), que la carta nueva no incluye. `fotos/carta.jpg` es la carta antigua (foto de las hojas con anilla), ya sin usar.
 
 ## Reglas
 - **Salchi y el logo:** usar SOLO los archivos de `/marca`. No redibujar ni inventar versiones del personaje. Para el efecto de estirar, separar la cabeza y la cola del SVG oficial y estirar entre ambas un "cuerpo" (trazo/rectángulo en rojo de marca). Si solo hay PNG, avisar y pedir el vector antes de improvisar.
@@ -59,8 +59,13 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 - Indicador **"¿Estamos abiertos ahora?"** calculado con el horario en zona horaria `Europe/Madrid`.
 - Antes de dar algo por terminado: ejecutar `npm run build` sin errores y revisar en móvil y escritorio.
 
-## Estado (17/11/2026)
-- **Rama `carta-editable` (17/11, sin publicar, pendiente de aprobación):**
+## Estado (20/11/2026)
+- **Rama `carta-zoom` (20/11, sin publicar, pendiente de aprobación):**
+  - **Carta nueva** (`fotos/carta_600ppp.png`, digital, 4958×7016): optimizada en `src/assets/fotos/carta-2026.jpg` (2600 px de ancho). Secciones: Pintxos, Huerta, Los clásicos, Burger · Perritos · Brioche, Molletes, Carnes y Postres. Transcrita en `CARTA_COMPLETA`. Cambios respecto a la antigua: entran burger, perritos con precio (7,50 €), brioche de cochinita, molletes, carnes y postres; salen fish & chips, alitas y pimientos de Padrón; suben jeta (3 € y 7,50 €), anillas (8,50 €) y costillas (9,90 €). `DESTACADOS_INICIALES` con los precios nuevos. Se quitó el export `CARTA` (sin uso). Los alérgenos de la carta impresa NO están transcritos.
+  - **Zoom por secciones en el capítulo 1:** la carta fijada recorre 9 paradas (carta entera, las 7 secciones, carta entera), cada una con su frase de colega. Las paradas y sus cajas (`[izq, arriba, der, abajo]` en fracciones de la imagen) están en `paradas` de `ComerBien.astro`; si cambia la maquetación de la carta, se retocan ahí. `movimiento.ts` calcula escala y desplazamiento para centrar cada caja en el hueco libre (sin la barra de Salchi), con `transformOrigin: '0 0'` y `invalidateOnRefresh`. El fijado dura `(paradas − 1) × 70 %` de pantalla (≈ 5,6 pantallas).
+  - Imagen: `Picture` con `widths` 700–2200, `quality={55}` y `fallbackFormat="webp"`, todo < 300 KB.
+  - Con movimiento reducido solo se ve la primera frase.
+- **Publicado el 17/11/2026 (rama `carta-editable`, ya en `main`):**
   - `/carta` **sin imágenes**: solo secciones, productos y precios. Un plato sin precio sale sin precio ni línea de puntos.
   - **Carta editable desde `/admin`** (parte 2 del panel, «Carta completa»): secciones (nombre, nota, orden, añadir, quitar) y platos (nombre, descripción, precio, orden, añadir, quitar), más «Restaurar la carta de partida». Mismo modelo que los destacados: localStorage (`CLAVE_CARTA`), solo se ve en el navegador donde se edita.
   - Datos en `src/data/carta.ts`: `SeccionCarta` / `PlatoCarta`, `CARTA_INICIAL` (construida con `CARTA_COMPLETA` y `BEBIDAS` de `negocio.ts`; las bebidas pasan a ser las secciones «Para beber» y «Blancos»), `validarCarta` y `leerCarta`. El id de cada sección (ancla del índice) sale del nombre.
@@ -100,8 +105,8 @@ Enfoque: **marca y personalidad**, no la historia del edificio.
 - **Lighthouse móvil (local, Edge en Windows):** accesibilidad, buenas prácticas y SEO 100; rendimiento entre 75 y 94 según la pasada (mucho ruido local). Medir con PageSpeed Insights tras publicar.
 
 ## Pendiente
-- **Del dueño:** precios de perritos, caña y sangría · carta de perritos · teléfono · resto de vinos (en la foto se intuyen blancos de 15, 18 y 22 €) · logotipo con texto en SVG · reseñas reales · fotos de local, terraza, barra, sangría, clientes y platos de la galería · dominio definitivo (al pasar a él, quitar `noindex` y cambiar `site` en `astro.config.mjs`).
-- **Del usuario:** pedir al estudio a Salchi en piezas · pasar el enlace `[ENLACE_RESEÑA_GOOGLE]` · aprobar (o no) la propuesta de galería · decidir si la reseña de «BONSAI EN CORTO» se queda (pone dos pegas y nombra una hamburguesa que no está en la carta transcrita).
-- **Ideas a futuro (no desarrollar aún):** foto real de la carta completa con zoom por secciones · que el bar elija los productos destacados de «Como Dios manda» (prioridad, ofertas, novedades).
+- **Del dueño:** precios de caña y sangría (la carta nueva no trae bebidas) · teléfono · resto de vinos (en la foto se intuyen blancos de 15, 18 y 22 €) · logotipo con texto en SVG · reseñas reales · fotos de local, terraza, barra, sangría, clientes y platos de la galería · dominio definitivo (al pasar a él, quitar `noindex` y cambiar `site` en `astro.config.mjs`).
+- **Del usuario:** pedir al estudio a Salchi en piezas · pasar el enlace `[ENLACE_RESEÑA_GOOGLE]` · aprobar (o no) la propuesta de galería · decidir si la reseña de «BONSAI EN CORTO» se queda (pone dos pegas sobre la Mahou y las croquetas; la hamburguesa que nombra ya está en la carta nueva).
+- **Ideas a futuro (no desarrollar aún):** transcribir los alérgenos de la carta nueva a `/carta` · usar en «Como Dios manda» los platos nuevos (burger, molletes, entrecot) cuando haya fotos.
 - **Mejoras propuestas, sin decidir:** tilde cortada en los títulos grandes ("ASÍ") · aprovechar mejor el espacio en escritorio (vaso y galería) · huecos visibles (`[PRECIO]`, `[Foto pendiente]`, `[Reseña real…]`, platos vacíos de la galería) · capítulo 3 hecho de marcadores de foto · QR para la presentación.
 - **Por probar:** la demo en iPhone (Safari) y en el navegador de Instagram; PageSpeed Insights sobre la URL publicada.
